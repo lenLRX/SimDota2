@@ -225,7 +225,8 @@ PyObject* Hero::get_state_tup()
     Py_XDECREF(env_state);
     Py_XDECREF(state_targets_list);
 
-    double reward = (exp - last_exp) * 0.01 + (HP - last_HP) * 0.01 + (gold - last_gold) * 0.1;
+    double reward = (exp - last_exp) + (HP - last_HP) + (gold - last_gold);
+    reward *= 0.001;
 
     last_exp = exp;
     last_HP = HP;
