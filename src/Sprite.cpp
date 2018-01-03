@@ -46,8 +46,8 @@ void Sprite::move()
         exit(3);
     }
 
-    if (!(std::get<0>(move_target) == 0.0
-        && std::get<1>(move_target) == 0.0)) {
+    //if (!(std::get<0>(move_target) == 0.0
+    //    && std::get<1>(move_target) == 0.0)) {
         double d = MovementSpeed * Engine->get_deltatick();
         if (hypot(dx, dy) < d) {
             location = move_target;
@@ -57,18 +57,21 @@ void Sprite::move()
             location = pos_tup(std::get<0>(location) + d * cos(a),
                 std::get<1>(location) + d * sin(a));
         }
-    }
+    //}
 
+    // Correct x-axis for out-of-bounds selection
     if (std::get<0>(location) > Config::bound_length) {
         location = pos_tup(Config::bound_length, std::get<1>(location));
     }
+    else if (std::get<0>(location) < -Config::bound_length) {
+        location = pos_tup(-Config::bound_length, std::get<1>(location));
+    }
+
+    // Correct y-axis for out-of-bounds selection
     if (std::get<1>(location) > Config::bound_length) {
         location = pos_tup(std::get<0>(location), Config::bound_length);
     }
-    if (std::get<0>(location) < -Config::bound_length) {
-        location = pos_tup(-Config::bound_length, std::get<1>(location));
-    }
-    if (std::get<1>(location) < -Config::bound_length) {
+    else if (std::get<1>(location) < -Config::bound_length) {
         location = pos_tup(std::get<0>(location), -Config::bound_length);
     }
 }
