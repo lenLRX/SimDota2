@@ -27,7 +27,9 @@ static SpriteDataType HeroData {
         { "AtkPoint", new double(0.5) },
         { "AtkBackswing", new double(0.54) },
         { "ProjectileSpeed", new double(1200) },
-        { "atktype", new AtkType(ranged) }
+        { "atktype", new AtkType(ranged) },
+        { "atkDmgType", new AtkDmgType(AtkDmgType::Hero) },
+        { "armorType", new ArmorType(ArmorType::Hero) }
     }}
 };
 

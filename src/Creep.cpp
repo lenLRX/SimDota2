@@ -22,7 +22,9 @@ static SpriteDataType CreepData {
         {"AtkBackswing", new double(0.533)},
         {"AttackSpeed", new double(100)},
         {"ProjectileSpeed", new double(-1) },
-        {"atktype", new AtkType(melee)}
+        {"atktype", new AtkType(melee)},
+        {"atkDmgType", new AtkDmgType(AtkDmgType::Pierce)},
+        {"armorType", new ArmorType(ArmorType::Basic)}
     }},
 
     {"RangedCreep", {
@@ -40,7 +42,9 @@ static SpriteDataType CreepData {
         { "AtkPoint", new double(0.5) },
         { "AtkBackswing", new double(0.67) },
         { "ProjectileSpeed", new double(900) },
-        { "atktype", new AtkType(ranged) }
+        { "atktype", new AtkType(ranged) },
+        { "atkDmgType", new AtkDmgType(AtkDmgType::Basic) },
+        { "armorType", new ArmorType(ArmorType::Basic) }
     }}
 };
 
