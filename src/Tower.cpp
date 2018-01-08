@@ -20,7 +20,9 @@ static SpriteDataType TowerData {
         { "AtkPoint", new double(0.6) },
         { "AtkBackswing", new double(0.4) },
         { "ProjectileSpeed", new double(750) },
-        { "atktype", new AtkType(ranged) }
+        { "atktype", new AtkType(ranged) },
+        { "atkDmgType", new AtkDmgType(AtkDmgType::Siege) },
+        { "armorType", new ArmorType(ArmorType::Structure) }
     }}
 };
 

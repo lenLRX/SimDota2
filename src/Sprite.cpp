@@ -88,6 +88,12 @@ bool Sprite::damadged(Sprite* attacker, double dmg)
     return true;
 }
 
+double Sprite::attakedDmg(Sprite* attacker, double dmg)
+{
+    return ArmorTypeVSDmgType[(int)armorType][(int)attacker->atkDmgType] * dmg;
+}
+
+
 void Sprite::dead(Sprite*  attacker)
 {
     _isDead = true;

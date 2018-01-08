@@ -3,6 +3,7 @@
 
 #include <Python.h>
 #include "Config.h"
+#include "AtkDmgType.h"
 
 #include <memory>
 #include <unordered_map>
@@ -34,7 +35,9 @@ SETATTR(data, double, bountyEXP);\
 SETATTR(data, double, AtkPoint);\
 SETATTR(data, double, AtkBackswing);\
 SETATTR(data, double, ProjectileSpeed);\
-SETATTR(data, AtkType, atktype)
+SETATTR(data, AtkType, atktype);\
+SETATTR(data, AtkDmgType, atkDmgType);\
+SETATTR(data, ArmorType, armorType)
 
 typedef std::unordered_map<std::string, std::unordered_map<std::string, void*> > SpriteDataType;
 
@@ -86,6 +89,7 @@ public:
     }
     void move();
     bool damadged(Sprite* attacker, double dmg);
+    double attakedDmg(Sprite* attacker, double dmg);
     void dead(Sprite*  attacker);
     void remove_visual_ent();
 
@@ -129,6 +133,8 @@ protected:
     bool _isDead;
     bool b_move;
     AtkType atktype;
+    AtkDmgType atkDmgType;
+    ArmorType armorType;
     PyObject* v_handle;
     pos_tup move_target;
 };
