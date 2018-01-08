@@ -17,7 +17,7 @@ static SpriteDataType HeroData {
         { "MP",new double(273) },
         { "MovementSpeed",new double(313) },
         { "Armor", new double(0.86) },
-        { "Attack", new double(38) },
+        { "Attack", new double(47) },
         { "AttackRange",new double(500) },
         { "SightRange", new double(1800) },
         { "Bounty", new double(200) },
@@ -227,7 +227,7 @@ PyObject* Hero::get_state_tup()
     Py_XDECREF(env_state);
     Py_XDECREF(state_targets_list);
 
-    double reward = (exp - last_exp) + (HP - last_HP) + (gold - last_gold);
+    double reward = (exp - last_exp) + (gold - last_gold);
     reward *= 0.001;
 
     last_exp = exp;
