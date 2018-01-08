@@ -54,8 +54,30 @@ void Sprite::move()
             b_move = false;
         }
         else {
-            location = pos_tup(std::get<0>(location) + d * cos(a),
-                std::get<1>(location) + d * sin(a));
+            if (Engine->get_nearby_ally(this).size() > 0)
+            {
+                auto nearby_ally = Engine->get_nearby_ally(this).front();
+                auto _nearby_loc = nearby_ally.first->get_location();
+                double dx2 = std::get<0>(_nearby_loc) - std::get<0>(location);
+                double dy2 = std::get<1>(_nearby_loc) - std::get<1>(location);
+                double a2 = std::atan2(dy2, dx2);
+                if (fabs(a2 - a) < 3.1415 / 4 && S2Sdistance(*this, *nearby_ally.first) < 200)
+                {
+                    location = pos_tup(std::get<0>(location) - d * cos(a2),
+                        std::get<1>(location) - d * sin(a2));
+                }
+                else
+                {
+                    location = pos_tup(std::get<0>(location) + d * cos(a),
+                        std::get<1>(location) + d * sin(a));
+                }
+            }
+            else 
+            {
+                location = pos_tup(std::get<0>(location) + d * cos(a),
+                    std::get<1>(location) + d * sin(a));
+            }
+            
         }
     //}
 
