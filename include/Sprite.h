@@ -12,6 +12,24 @@
 //forward decl
 class cppSimulatorImp;
 
+//SpriteType map to Valve's UnitType enum in the Protobuf
+enum UnitType 
+{
+    UNITTYPE_INVALID,
+    UNITTYPE_HERO,
+    UNITTYPE_CREEP_HERO,
+    UNITTYPE_LANE_CREEP,
+    UNITTYPE_JUNGLE_CREEP,
+    UNITTYPE_ROSHAN,
+    UNITTYPE_TOWER,          // 6
+    UNITTYPE_BARRACKS,
+    UNITTYPE_SHRINE,
+    UNITTYPE_ANCIENT,
+    UNITTYPE_EFFIGY,         // 10
+    UNITTYPE_COURIER,
+    UNITTYPE_WARD
+};
+
 enum AtkType
 {
     melee,
@@ -45,12 +63,13 @@ class Sprite {
 public:
     Sprite(cppSimulatorImp* Engine,
         PyObject* canvas,
+        UnitType type,
         Side side, pos_tup loc, double HP,
         double MP, double Speed,double Armor,
         double ATK,double ATKRange,double SightRange,
         double Bounty,double bountyEXP,
         double BAT,double AS):
-        Engine(Engine),canvas(canvas),side(side),
+        Engine(Engine),canvas(canvas),unit_type(type),side(side),
         location(loc),HP(HP),MP(MP),MovementSpeed(Speed),
         BaseAttackTime(BAT),AttackSpeed(AS),Armor(Armor),
         Attack(ATK),AttackRange(ATKRange),SightRange(SightRange),
@@ -60,7 +79,7 @@ public:
         _update_para();
     }
 
-    Sprite() :LastAttackTime(-1),
+    Sprite() : unit_type(UNITTYPE_INVALID), LastAttackTime(-1),
         exp(0), gold(0), _isDead(false), b_move(false), canvas(NULL), v_handle(NULL) {}
 
     virtual ~Sprite(){
@@ -97,6 +116,8 @@ public:
 
     inline cppSimulatorImp* get_engine() { return Engine; }
 
+    inline UnitType get_UnitType() { return unit_type; }
+
     inline double get_HP() { return HP; }
     inline double get_AttackTime() { return AttackTime; }
     inline double get_Attack() { return Attack; }
@@ -107,11 +128,14 @@ public:
     inline double get_ProjectileSpeed() { return ProjectileSpeed; }
     double TimeToDamage(const Sprite* s);
 
+    inline bool isBuilding() { return unit_type >= UNITTYPE_TOWER && unit_type <= UNITTYPE_EFFIGY; }
+
 protected:
     cppSimulatorImp* Engine;
     PyObject* canvas;
     Side side;
     pos_tup location;
+    UnitType unit_type;
     double HP;
     double MP;
     double MovementSpeed;

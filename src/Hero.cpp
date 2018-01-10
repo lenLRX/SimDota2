@@ -41,6 +41,7 @@ static int get_rand()
 Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name):target(nullptr)
 {
     Engine = _Engine;
+    unit_type = UNITTYPE_HERO;
     side = _side;
     const auto& data = HeroData[type_name];
     INIT_ATTR_BY(data);
