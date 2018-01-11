@@ -26,6 +26,11 @@ public:
     void set_order(PyObject* order);
     PyObject* get_state_tup();
     PyObject* predefined_step();
+    
+    inline unsigned int get_level() { return level; }
+    int get_health();
+    int get_mana();
+    
 private:
     pos_tup init_loc;
     pos_tup move_order;
@@ -37,6 +42,7 @@ private:
     double last_gold;
     double last_exp;
     double last_HP;
+    unsigned int level;
     std::string color;
 };
 

@@ -87,6 +87,18 @@ Hero::~Hero()
     Logger::getInstance().flush();
 }
 
+int Hero::get_health()
+{
+    //return 200 + 20*get_strength_attribute();
+    return 500;
+}
+
+int Hero::get_mana()
+{
+    //return 75 + 12*get_intelligence_attribute();
+    return 291;
+}
+
 void Hero::step()
 {
     if (isAttacking())
