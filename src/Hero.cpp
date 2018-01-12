@@ -87,15 +87,15 @@ Hero::~Hero()
     Logger::getInstance().flush();
 }
 
-int Hero::get_health()
+int Hero::get_max_health()
 {
-    //return 200 + 20*get_strength_attribute();
+    //return 200 + 20*(base_strength + strength_gain*level);
     return 500;
 }
 
-int Hero::get_mana()
+int Hero::get_max_mana()
 {
-    //return 75 + 12*get_intelligence_attribute();
+    //return 75 + 12*(base_intelligence + intelligence_gain*level);
     return 291;
 }
 
