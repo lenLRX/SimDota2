@@ -2,6 +2,8 @@
 #include "util.h"
 
 #include <fstream>
+#include <iostream>
+#include "rapidjson/error/en.h"
 
 
 
@@ -19,6 +21,11 @@ Config::Config(std::string json_path)
     Document document;
     IStreamWrapper isw(ifs);
     document.ParseStream(isw);
+    auto err = document.GetParseError();
+    if (kParseErrorNone != err)
+    {
+        std::cerr << GetParseError_En(err) << std::endl;
+    }
     GET_DOUBLE(document, tick_per_second);
     GET_DOUBLE(document, map_div);
     GET_TUPLE(document, rad_init_pos);
@@ -31,12 +38,18 @@ Config::Config(std::string json_path)
     GET_STRING(document, Dire_Colors);
 }
 
+
 SpriteData::SpriteData(std::string json_path)
 {
     std::ifstream ifs(json_path);
     Document document;
     IStreamWrapper isw(ifs);
     document.ParseStream(isw);
+    auto err = document.GetParseError();
+    if (kParseErrorNone != err)
+    {
+        std::cerr << GetParseError_En(err) << std::endl;
+    }
     GET_DOUBLE(document, HP);
     MaxHP = HP;
     GET_DOUBLE(document, MP);
