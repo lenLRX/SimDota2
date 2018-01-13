@@ -1,0 +1,20 @@
+{
+  "HP": 14000000,
+  "MP": 0,
+  "MovementSpeed": 0,
+  "Armor": 14,
+  "Attack": 120,
+  "AttackRange": 700,
+  "SightRange": 1900,
+  "Bounty": -1,
+  "bountyEXP": -1,
+  "BaseAttackTime": 1,
+  "AtkPoint": 0.6,
+  "AtkBackswing": 0.4,
+  "AttackSpeed": 100,
+  "ProjectileSpeed": 750,
+  "atktype": "ranged",
+  "atkDmgType": "Siege",
+  "armorType": "Structure",
+  "viz_radius": 5
+}

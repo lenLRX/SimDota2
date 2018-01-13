@@ -10,13 +10,15 @@
 //forward decl
 class Hero;
 class Sprite;
+class Config;
 
 class cppSimulatorImp
 {
 public:
     cppSimulatorImp() = delete;
-    cppSimulatorImp(cppSimulatorObject* obj,PyObject* canvas = nullptr);
+    cppSimulatorImp(cppSimulatorObject* obj,Config* cfg ,PyObject* canvas = nullptr);
     ~cppSimulatorImp();
+    inline Config* get_config() { return cfg; }
     double get_time();
     inline void tick_tick() { tick_time += delta_tick; }
     inline void addSprite(Sprite* s) { Sprites.push_back(s); allSprites.push_back(s); }
@@ -34,6 +36,7 @@ public:
     PyObject* predefined_step(std::string side, int idx);
 private:
     cppSimulatorObject* self;
+    Config* cfg;
     double tick_time;
     double tick_per_second;
     double delta_tick;

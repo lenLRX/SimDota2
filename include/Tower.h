@@ -19,7 +19,6 @@ public:
 
 private:
     pos_tup init_loc;
-    double viz_radius;
     std::string color;
 };
 

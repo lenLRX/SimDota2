@@ -15,10 +15,11 @@ void EventFactory::CreateAttackEvnt(Sprite* attacker, Sprite* victim)
         auto p_victim = victim->pos_in_wnd();
         auto fn = PyObject_GetAttrString(canvas, "create_line");
         auto args = Py_BuildValue("(dddd)",
-            std::get<0>(p_attacker),
-            std::get<1>(p_attacker),
-            std::get<0>(p_victim),
-            std::get<1>(p_victim));
+            p_attacker.x,
+            p_attacker.y,
+            p_victim.x,
+            p_victim.y
+        );
         auto kw = Py_BuildValue("{s:s}","arrow","last");
         vhandle = PyObject_Call(fn, args, kw);
         Py_XDECREF(fn);

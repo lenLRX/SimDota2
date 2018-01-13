@@ -7,9 +7,9 @@
 
 #include <algorithm>
 
-cppSimulatorImp::cppSimulatorImp(cppSimulatorObject* obj, PyObject* canvas)
-    :self(obj), tick_time(0.0), tick_per_second(Config::tick_per_second), 
-    delta_tick(1.0 / Config::tick_per_second), canvas(canvas)
+cppSimulatorImp::cppSimulatorImp(cppSimulatorObject* obj,Config* cfg, PyObject* canvas)
+    :self(obj), cfg(cfg), tick_time(0.0), tick_per_second(cfg->tick_per_second),
+    delta_tick(1.0 / cfg->tick_per_second), canvas(canvas)
 {
     EventFactory::CreateSpawnEvnt(this);
     Tower::initTowers(this);

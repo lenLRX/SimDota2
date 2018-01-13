@@ -4,6 +4,7 @@
 #include <Python.h>
 
 class cppSimulatorImp;
+class Config;
 
 typedef struct {
     PyObject_HEAD

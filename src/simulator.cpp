@@ -1,8 +1,9 @@
 #include "simulator.h"
 #include "simulatorImp.h"
 #include "log.h"
+#include "Config.h"
 
-#define __ENGINE_VERSION__ "0.0.6"
+#define __ENGINE_VERSION__ "0.0.7"
 
 static void
 cppSimulator_dealloc(cppSimulatorObject* self)
@@ -26,14 +27,17 @@ static int
 cppSimulator_init(cppSimulatorObject* self, PyObject *args, PyObject *kwds) {
     //printf("initing simulator\n");
     PyObject* obj_canvas = NULL;
-    if (!PyArg_ParseTuple(args, "|O",&obj_canvas)) {
+    char* config_path = NULL;
+    if (!PyArg_ParseTuple(args, "s|O",&config_path ,&obj_canvas)) {
         return -1;
     }
     if (obj_canvas == Py_None) {
         obj_canvas = NULL;
         Py_DECREF(Py_None);
     }
-    self->pImp = new cppSimulatorImp(self, obj_canvas);
+    
+    auto pCfg = ConfigCacheMgr<Config>::getInstance().get(config_path);
+    self->pImp = new cppSimulatorImp(self, pCfg, obj_canvas);
     //Py_XDECREF(args);
     //Py_XDECREF(kwds);
     return 0;

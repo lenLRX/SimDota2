@@ -30,57 +30,31 @@ enum UnitType
     UNITTYPE_WARD
 };
 
-enum AtkType
-{
-    melee,
-    ranged
-};
-
 #define SETATTR(data,type,attr) attr = *(type*)data.at(#attr)
 
-#define INIT_ATTR_BY(data)\
-SETATTR(data, double, HP);\
-SETATTR(data, double, MP);\
-SETATTR(data, double, MovementSpeed);\
-SETATTR(data, double, BaseAttackTime);\
-SETATTR(data, double, AttackSpeed);\
-SETATTR(data, double, Armor);\
-SETATTR(data, double, Attack);\
-SETATTR(data, double, AttackRange);\
-SETATTR(data, double, SightRange);\
-SETATTR(data, double, Bounty);\
-SETATTR(data, double, bountyEXP);\
-SETATTR(data, double, AtkPoint);\
-SETATTR(data, double, AtkBackswing);\
-SETATTR(data, double, ProjectileSpeed);\
-SETATTR(data, AtkType, atktype);\
-SETATTR(data, AtkDmgType, atkDmgType);\
-SETATTR(data, ArmorType, armorType)
+#define GET_CFG \
+Engine->get_config()
+
+#define DEF_INIT_DATA_FN(TYPE)\
+static SpriteData init##TYPE##Data(cppSimulatorImp* Engine,\
+    std::string type_name, void(*p_fn)(SpriteData*,std::string)  = nullptr)\
+{\
+    std::string json_path = GET_CFG->ConfigDir + "/" + #TYPE + "/" + type_name + ".json";\
+    auto data = *ConfigCacheMgr<SpriteData>::getInstance().get(json_path, p_fn);\
+    return data;\
+}
+
+#define INIT_DATA(ENG, TYPE, TYPE_NAME, FN)\
+init##TYPE##Data(ENG, TYPE_NAME, FN)
+
 
 typedef std::unordered_map<std::string, std::unordered_map<std::string, void*> > SpriteDataType;
 
+
 class Sprite {
 public:
-    Sprite(cppSimulatorImp* Engine,
-        PyObject* canvas,
-        UnitType type,
-        Side side, pos_tup loc, double HP,
-        double MP, double Speed,double Armor,
-        double ATK,double ATKRange,double SightRange,
-        double Bounty,double bountyEXP,
-        double BAT,double AS):
-        Engine(Engine),canvas(canvas),unit_type(type),side(side),
-        location(loc),HP(HP),MP(MP),MovementSpeed(Speed),
-        BaseAttackTime(BAT),AttackSpeed(AS),Armor(Armor),
-        Attack(ATK),AttackRange(ATKRange),SightRange(SightRange),
-        Bounty(Bounty), bountyEXP(bountyEXP), LastAttackTime(-1),
-        exp(0),_isDead(false),b_move(false), v_handle(NULL)
-    {   
-        _update_para();
-    }
-
-    Sprite() : unit_type(UNITTYPE_INVALID), LastAttackTime(-1),
-        exp(0), gold(0), _isDead(false), b_move(false), canvas(NULL), v_handle(NULL) {}
+    Sprite(SpriteData data) : unit_type(UNITTYPE_INVALID), LastAttackTime(-1),
+        exp(0), gold(0), _isDead(false), b_move(false), canvas(NULL), v_handle(NULL), data(data) {}
 
     virtual ~Sprite(){
         remove_visual_ent();
@@ -88,17 +62,14 @@ public:
     }
 
     inline void _update_para() {
-        double AttackPerSecond = AttackSpeed * 0.01 / BaseAttackTime;
+        double AttackPerSecond = data.AttackSpeed * 0.01 / data.BaseAttackTime;
         AttackTime = 1 / AttackPerSecond;
     }
 
     virtual void step() = 0;
     virtual void draw() = 0;
 
-    inline pos_tup pos_in_wnd() {
-        return pos_tup(std::get<0>(location) * Config::game2window_scale * 0.5 + Config::windows_size * 0.5,
-            std::get<1>(location) * Config::game2window_scale * 0.5 + Config::windows_size * 0.5);
-    }
+    pos_tup pos_in_wnd();
 
     void attack(Sprite* target);
     bool isAttacking();
@@ -118,14 +89,14 @@ public:
 
     inline UnitType get_UnitType() { return unit_type; }
 
-    inline double get_HP() { return HP; }
-    inline double get_AttackTime() { return AttackTime; }
-    inline double get_Attack() { return Attack; }
+    inline double get_HP() { return data.HP; }
+    inline double get_AttackTime() { return data.AttackTime; }
+    inline double get_Attack() { return data.Attack; }
     inline Side get_side() { return side; }
-    inline double get_SightRange() { return SightRange; }
+    inline double get_SightRange() { return data.SightRange; }
     inline pos_tup get_location() { return location; }
     inline bool isDead(){return _isDead;}
-    inline double get_ProjectileSpeed() { return ProjectileSpeed; }
+    inline double get_ProjectileSpeed() { return data.ProjectileSpeed; }
     double TimeToDamage(const Sprite* s);
 
     inline bool isBuilding() { return unit_type >= UNITTYPE_TOWER && unit_type <= UNITTYPE_EFFIGY; }
@@ -133,32 +104,16 @@ public:
 protected:
     cppSimulatorImp* Engine;
     PyObject* canvas;
+    SpriteData data;
     Side side;
     pos_tup location;
     UnitType unit_type;
-    double HP;
-    double MP;
-    double MovementSpeed;
-    double BaseAttackTime;
-    double AttackSpeed;
-    double Armor;
-    double Attack;
-    double AttackRange;
-    double SightRange;
-    double Bounty;
-    double bountyEXP;
     double LastAttackTime;
     double AttackTime;
-    double AtkPoint;
-    double AtkBackswing;
-    double ProjectileSpeed;
     double exp;
     double gold;
     bool _isDead;
     bool b_move;
-    AtkType atktype;
-    AtkDmgType atkDmgType;
-    ArmorType armorType;
     PyObject* v_handle;
     pos_tup move_target;
 };

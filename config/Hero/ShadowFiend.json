@@ -1,0 +1,32 @@
+{
+  "HP": 500,
+  "MP": 273,
+  "MovementSpeed": 313,
+  "Armor": 0.86,
+  "Attack": 38,
+  "AttackRange": 500,
+  "SightRange": 1800,
+  "Bounty": 200,
+  "bountyEXP": 0,
+  "BaseAttackTime": 1.7,
+  "AtkPoint": 0.5,
+  "AtkBackswing": 0.54,
+  "AttackSpeed": 120,
+  "ProjectileSpeed": 1200,
+  "atktype": "ranged",
+  "atkDmgType": "Hero",
+  "armorType": "Hero",
+  "viz_radius": 5,
+  "Radiant": {
+    "init_loc": {
+      "x": -7205,
+      "y": -6610
+    }
+  },
+  "Dire": {
+    "init_loc": {
+      "x": 7000,
+      "y": 6475
+    }
+  }
+}

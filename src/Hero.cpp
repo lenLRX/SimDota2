@@ -5,60 +5,70 @@
 #include <cmath>
 #include <random>
 
-//TODO use json
+using namespace rapidjson;
+
+class HeroDataExtFn;
+
+class HeroDataExt
+{
+private:
+    friend void HeroDataExtFn(SpriteData* s, std::string json_path);
+    HeroDataExt(std::string json_path)
+    {
+        std::ifstream ifs(json_path);
+        Document document;
+        IStreamWrapper isw(ifs);
+        document.ParseStream(isw);
+        pos_tup tmp_tup;
+        double temp_x;
+        double temp_y;
+        temp_x = document["Radiant"]["init_loc"]["x"].GetDouble();
+        temp_y = document["Radiant"]["init_loc"]["y"].GetDouble();
+        init_loc[(int)Side::Radiant] = pos_tup(temp_x, temp_y);
+
+        temp_x = document["Dire"]["init_loc"]["x"].GetDouble();
+        temp_y = document["Dire"]["init_loc"]["y"].GetDouble();
+        init_loc[(int)Side::Dire] = pos_tup(temp_x, temp_y);
+    }
+public:
+    pos_tup init_loc[2];
+};
+
+void HeroDataExtFn(SpriteData* s, std::string json_path)
+{
+    s->ext = new HeroDataExt(json_path);
+};
+
 
 static std::default_random_engine rnd_gen;
 static std::uniform_int_distribution<int> pos_distribution(1, 1000);
 static std::uniform_int_distribution<int> sign_distribution(-1, 1);
-
-static SpriteDataType HeroData {
-    { "ShadowFiend", {
-        { "HP",new double(500) },
-        { "MP",new double(273) },
-        { "MovementSpeed",new double(313) },
-        { "Armor", new double(0.86) },
-        { "Attack", new double(38) },
-        { "AttackRange",new double(500) },
-        { "SightRange", new double(1800) },
-        { "Bounty", new double(200) },
-        { "bountyEXP", new double(0) },
-        { "BaseAttackTime", new double(1.7) },
-        { "AttackSpeed", new double(120) },
-        { "AtkPoint", new double(0.5) },
-        { "AtkBackswing", new double(0.54) },
-        { "ProjectileSpeed", new double(1200) },
-        { "atktype", new AtkType(ranged) },
-        { "atkDmgType", new AtkDmgType(AtkDmgType::Hero) },
-        { "armorType", new ArmorType(ArmorType::Hero) }
-    }}
-};
 
 static int get_rand()
 {
     return sign_distribution(rnd_gen) * pos_distribution(rnd_gen);
 }
 
-Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name):target(nullptr)
+DEF_INIT_DATA_FN(Hero)
+
+Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name)
+    :Sprite(INIT_DATA(_Engine, Hero, type_name, HeroDataExtFn)), target(nullptr)
 {
     Engine = _Engine;
     unit_type = UNITTYPE_HERO;
     side = _side;
-    const auto& data = HeroData[type_name];
-    INIT_ATTR_BY(data);
 
     last_exp = 0.0;
-    last_HP = HP;
+    last_HP = data.HP;
 
     _update_para();
-
-    viz_radius = 5;
+    HeroDataExt* p_ext = (HeroDataExt*)data.ext;
+    init_loc = p_ext->init_loc[(int)side];
     if (side == Side::Radiant) {
-        init_loc = pos_tup(-7205 + get_rand(), -6610 + get_rand());
-        color = Config::Radiant_Colors;
+        color = GET_CFG->Radiant_Colors;
     }
     else {
-        init_loc = pos_tup(7000 + get_rand(), 6475 + get_rand());
-        color = Config::Dire_Colors;
+        color = GET_CFG->Dire_Colors;
     }
 
     location = init_loc;
@@ -69,10 +79,10 @@ Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name):target(n
         pos_tup p = pos_in_wnd();
         PyObject* create_rectangle = PyObject_GetAttrString(canvas, "create_oval");
         PyObject* args = Py_BuildValue("(dddd)",
-            std::get<0>(p) - viz_radius,
-            std::get<1>(p) + viz_radius,
-            std::get<0>(p) + viz_radius,
-            std::get<1>(p) - viz_radius);
+            p.x - data.viz_radius,
+            p.y + data.viz_radius,
+            p.x + data.viz_radius,
+            p.y - data.viz_radius);
         PyObject* kwargs = Py_BuildValue("{s:s}", "fill", color.c_str());
         v_handle = PyObject_Call(create_rectangle, args, kwargs);
         Py_DECREF(kwargs);
@@ -107,8 +117,8 @@ void Hero::step()
         ;
     }
     else if (decisonType::move == decision) {
-        auto p = pos_tup(std::get<0>(move_order) + std::get<0>(location),
-            std::get<1>(move_order) + std::get<1>(location));
+        auto p = pos_tup(move_order.x + location.x,
+            move_order.y + location.y);
         set_move(p);
     }
     else if (decisonType::attack == decision) {
@@ -130,10 +140,10 @@ void Hero::draw()
             "coords",
             "(Odddd)",
             v_handle,
-            std::get<0>(p) - viz_radius,
-            std::get<1>(p) + viz_radius,
-            std::get<0>(p) + viz_radius,
-            std::get<1>(p) - viz_radius));
+            p.x - data.viz_radius,
+            p.y + data.viz_radius,
+            p.x + data.viz_radius,
+            p.y - data.viz_radius));
     }
     
 }
@@ -181,8 +191,9 @@ PyObject* Hero::get_state_tup()
     double ally_x = 0.0;
     double ally_y = 0.0;
     for (size_t i = 0; i < ally_input_size; ++i) {
-        ally_x += sign * (std::get<0>(nearby_ally[i].first->get_location()) - std::get<0>(location)) / Config::map_div;
-        ally_y += sign * (std::get<1>(nearby_ally[i].first->get_location()) - std::get<1>(location)) / Config::map_div;
+        auto ally_loc = nearby_ally[i].first->get_location();
+        ally_x += sign * (ally_loc.x - location.x) / GET_CFG->map_div;
+        ally_y += sign * (ally_loc.y - location.y) / GET_CFG->map_div;
     }
 
     if (0 != ally_input_size) {
@@ -195,8 +206,9 @@ PyObject* Hero::get_state_tup()
     double enemy_x = 0.0;
     double enemy_y = 0.0;
     for (size_t i = 0; i < enemy_input_size; ++i) {
-        enemy_x += sign * (std::get<0>(nearby_enemy[i].first->get_location()) - std::get<0>(location)) / Config::map_div;
-        enemy_y += sign * (std::get<1>(nearby_enemy[i].first->get_location()) - std::get<1>(location)) / Config::map_div;
+        auto enemy_loc = nearby_enemy[i].first->get_location();
+        enemy_x += sign * (enemy_loc.x - location.x) / GET_CFG->map_div;
+        enemy_y += sign * (enemy_loc.y - location.y) / GET_CFG->map_div;
     }
 
     if (0 != enemy_input_size) {
@@ -205,9 +217,9 @@ PyObject* Hero::get_state_tup()
     }
 
     PyObject* env_state = Py_BuildValue("[dddidddddd]",
-        sign * std::get<0>(location) / Config::map_div,
-        sign * std::get<1>(location) / Config::map_div,
-        Attack,
+        sign * location.x / GET_CFG->map_div,
+        sign * location.y / GET_CFG->map_div,
+        data.Attack,
         side,
         ally_x,
         ally_y,
@@ -227,7 +239,8 @@ PyObject* Hero::get_state_tup()
         target_list.clear();
         state_targets_list = PyList_New(enemy_input_size);
         for (int i = 0; i < enemy_input_size; i++) {
-            PyList_SET_ITEM(state_targets_list,i, Py_BuildValue("(dd)", nearby_enemy[i].first->get_HP(), nearby_enemy[i].second / AttackRange));
+            PyList_SET_ITEM(state_targets_list,i, Py_BuildValue("(dd)",
+                nearby_enemy[i].first->get_HP(), nearby_enemy[i].second / data.AttackRange));
             target_list.push_back(nearby_enemy[i].first);
         }
         //LOG << "target_list.size " << target_list.size() << endl;
@@ -240,11 +253,11 @@ PyObject* Hero::get_state_tup()
     Py_XDECREF(env_state);
     Py_XDECREF(state_targets_list);
 
-    double reward = (exp - last_exp) + (HP - last_HP) + (gold - last_gold);
+    double reward = (exp - last_exp) + (data.HP - last_HP) + (gold - last_gold);
     reward *= 0.001;
 
     last_exp = exp;
-    last_HP = HP;
+    last_HP = data.HP;
     last_gold = gold;
 
     PyObject* ret = Py_BuildValue("(OdO)", state, reward, _isDead ? Py_True : Py_False);
@@ -271,7 +284,7 @@ PyObject* Hero::predefined_step()
     if (targetlist_size > 0)
     {
         for (int i = 0; i < targetlist_size; ++i) {
-            if (!target_list[i]->isDead() && target_list[i]->get_HP() < Attack) {
+            if (!target_list[i]->isDead() && target_list[i]->get_HP() < data.Attack) {
                 PyObject* obj = Py_BuildValue("(ii)", decisonType::attack, i);
                 return obj;
             }
@@ -283,20 +296,20 @@ PyObject* Hero::predefined_step()
     {
         ret = nearby_enemy[0].first->get_location();
         if (side == Side::Radiant) {
-            ret = pos_tup(std::get<0>(nearby_enemy[0].first->get_location()) - _dis,
-                std::get<1>(nearby_enemy[0].first->get_location()) - _dis);
+            ret = pos_tup(ret.x - _dis,
+                ret.y - _dis);
         }
         else {
-            ret = pos_tup(std::get<0>(nearby_enemy[0].first->get_location()) + _dis,
-                std::get<1>(nearby_enemy[0].first->get_location()) + _dis);
+            ret = pos_tup(ret.x + _dis,
+                ret.y + _dis);
         }
     }
     else {
         ret = pos_tup(-482, -400);
     }
     
-    double dx = std::get<0>(ret) - std::get<0>(location);
-    double dy = std::get<1>(ret) - std::get<1>(location);
+    double dx = ret.x - location.x;
+    double dy = ret.y - location.y;
     dx *= sign;
     dy *= sign;
 

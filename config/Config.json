@@ -1,0 +1,18 @@
+{
+
+  "tick_per_second": 10.0,
+  "map_div": 7000.0,
+  "rad_init_pos": {
+    "x": -0.95714285714286,
+    "y": -0.95714341517857
+  },
+  "dire_init_pos": {
+    "x": 0.98571428571429,
+    "y": 0.949999441964297
+  },
+  "velocity": 315.0,
+  "bound_length": 8000.0,
+  "windows_size": 400.0,
+  "Radiant_Colors": "green",
+  "Dire_Colors": "red"
+}
