@@ -7,8 +7,8 @@
 
 pos_tup Sprite::pos_in_wnd()
 {
-    return pos_tup(std::get<0>(location) * GET_CFG->game2window_scale * 0.5 + GET_CFG->windows_size * 0.5,
-        std::get<1>(location) * GET_CFG->game2window_scale * 0.5 + GET_CFG->windows_size * 0.5);
+    return pos_tup(location.x * GET_CFG->game2window_scale * 0.5 + GET_CFG->windows_size * 0.5,
+        location.y * GET_CFG->game2window_scale * 0.5 + GET_CFG->windows_size * 0.5);
 }
 
 void Sprite::attack(Sprite* target)
@@ -37,8 +37,8 @@ void Sprite::move()
     }
         
 
-    double dx = std::get<0>(move_target) - std::get<0>(location);
-    double dy = std::get<1>(move_target) - std::get<1>(location);
+    double dx = move_target.x - location.x;
+    double dy = move_target.y - location.y;
     
     if(dx == 0.0 && dy == 0.0){
         return;
@@ -52,33 +52,30 @@ void Sprite::move()
         exit(3);
     }
 
-    //if (!(std::get<0>(move_target) == 0.0
-    //    && std::get<1>(move_target) == 0.0)) {
-        double d = MovementSpeed * Engine->get_deltatick();
-        if (hypot(dx, dy) < d) {
-            location = move_target;
-            b_move = false;
-        }
-        else {
-            location = pos_tup(std::get<0>(location) + d * cos(a),
-                std::get<1>(location) + d * sin(a));
-        }
-    //}
-
-    // Correct x-axis for out-of-bounds selection
-    if (std::get<0>(location) > GET_CFG->bound_length) {
-        location = pos_tup(GET_CFG->bound_length, std::get<1>(location));
+    double d = data.MovementSpeed * Engine->get_deltatick();
+    if (hypot(dx, dy) < d) {
+        location = move_target;
+        b_move = false;
     }
-    else if (std::get<0>(location) < -GET_CFG->bound_length) {
-        location = pos_tup(-GET_CFG->bound_length, std::get<1>(location));
+    else {
+        location.x += d * cos(a);
+        location.y += d * sin(a);
+    }
+    
+    // Correct x-axis for out-of-bounds selection
+    if (location.x > GET_CFG->bound_length) {
+        location.x = GET_CFG->bound_length;
+    }
+    else if (location.x < -GET_CFG->bound_length) {
+        location.x = -GET_CFG->bound_length;
     }
 
     // Correct y-axis for out-of-bounds selection
-    if (std::get<1>(location) > GET_CFG->bound_length) {
-        location = pos_tup(std::get<0>(location), GET_CFG->bound_length);
+    if (location.y > GET_CFG->bound_length) {
+        location.y = GET_CFG->bound_length;
     }
-    else if (std::get<1>(location) < -GET_CFG->bound_length) {
-        location = pos_tup(std::get<0>(location), -GET_CFG->bound_length);
+    else if (location.y < -GET_CFG->bound_length) {
+        location.y = -GET_CFG->bound_length;
     }
 }
 
@@ -87,8 +84,8 @@ bool Sprite::damadged(Sprite* attacker, double dmg)
     if (isDead()) {
         return false;
     }
-    HP -= dmg;
-    if (HP <= 0.0) {
+    data.HP -= dmg;
+    if (data.HP <= 0.0) {
         dead(attacker);
     }
     return true;
@@ -96,7 +93,7 @@ bool Sprite::damadged(Sprite* attacker, double dmg)
 
 double Sprite::attakedDmg(Sprite* attacker, double dmg)
 {
-    return ArmorTypeVSDmgType[(int)armorType][(int)attacker->atkDmgType] * dmg;
+    return ArmorTypeVSDmgType[(int)data.armorType][(int)attacker->data.atkDmgType] * dmg;
 }
 
 
@@ -108,7 +105,7 @@ void Sprite::dead(Sprite* attacker)
         if (s->side != side) {
             double dis = S2Sdistance(*s, *this);
             if (dis <= 1300.0) {
-                s->exp += bountyEXP;
+                s->exp += data.bountyEXP;
             }
             //else {
             //    s->exp += bountyEXP * (dis - 1300 + 1) / Config::map_div * 0.1;
@@ -116,7 +113,7 @@ void Sprite::dead(Sprite* attacker)
         }
     }
     if (nullptr != attacker) {
-        attacker->gold += Bounty;
+        attacker->gold += data.Bounty;
     }
 }
 
@@ -137,19 +134,19 @@ void Sprite::remove_visual_ent()
 
 double Sprite::S2Sdistance(const Sprite & s1, const Sprite & s2)
 {
-    double dx = std::get<0>(s1.location) - std::get<0>(s2.location);
-    double dy = std::get<1>(s1.location) - std::get<1>(s2.location);
+    double dx = s1.location.x - s2.location.x;
+    double dy = s1.location.y - s2.location.y;
     return hypot(dx, dy);
 }
 
 double Sprite::TimeToDamage(const Sprite * s)
 {
-    double TimeToAtk = AtkPoint / AttackSpeed * 0.01;
-    if (melee == atktype) {
+    double TimeToAtk = data.AtkPoint / data.AttackSpeed * 0.01;
+    if (melee == data.atktype) {
         return TimeToAtk;
     }
     else {
         double _d = S2Sdistance(*this, *s);
-        return TimeToAtk + _d / ProjectileSpeed;
+        return TimeToAtk + _d / data.ProjectileSpeed;
     }
 }

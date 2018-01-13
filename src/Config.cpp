@@ -1,19 +1,10 @@
 #include "Config.h"
-#include "rapidjson/document.h"
-#include "rapidjson/istreamwrapper.h"
+#include "util.h"
 
 #include <fstream>
 
 
-#define GET_DOUBLE(doc, key)\
-key = doc[#key].GetDouble()
 
-#define GET_TUPLE(doc, key)\
-do {\
-    double temp_x = document[#key]["x"].GetDouble();\
-    double temp_y = document[#key]["y"].GetDouble();\
-    key = pos_tup(temp_x, temp_y);\
-}while(0)
 
 #define GET_STRING(doc, key)\
 key = doc[#key].GetString()
@@ -22,6 +13,8 @@ using namespace rapidjson;
 
 Config::Config(std::string json_path)
 {
+    ConfigDir = DirName(json_path);
+    //TODO:handle error
     std::ifstream ifs(json_path);
     Document document;
     IStreamWrapper isw(ifs);
@@ -36,4 +29,35 @@ Config::Config(std::string json_path)
     game2window_scale = windows_size / bound_length;
     GET_STRING(document, Radiant_Colors);
     GET_STRING(document, Dire_Colors);
+}
+
+SpriteData::SpriteData(std::string json_path)
+{
+    std::ifstream ifs(json_path);
+    Document document;
+    IStreamWrapper isw(ifs);
+    document.ParseStream(isw);
+    GET_DOUBLE(document, HP);
+    MaxHP = HP;
+    GET_DOUBLE(document, MP);
+    MaxMP = MP;
+    GET_DOUBLE(document, MP);
+    GET_DOUBLE(document, MovementSpeed);
+    GET_DOUBLE(document, BaseAttackTime);
+    GET_DOUBLE(document, AttackSpeed);
+    GET_DOUBLE(document, Armor);
+    GET_DOUBLE(document, Attack);
+    GET_DOUBLE(document, AttackRange);
+    GET_DOUBLE(document, SightRange);
+    GET_DOUBLE(document, Bounty);
+    GET_DOUBLE(document, bountyEXP);
+    GET_DOUBLE(document, LastAttackTime);
+    GET_DOUBLE(document, AttackTime);
+    GET_DOUBLE(document, AtkPoint);
+    GET_DOUBLE(document, AtkBackswing);
+    GET_DOUBLE(document, ProjectileSpeed);
+    atktype = str2AtkType.at(document["atktype"].GetString());
+    atkDmgType = str2AtkDmgTypes.at(document["atkDmgType"].GetString());
+    armorType = str2ArmorType.at(document["armorType"].GetString());
+    GET_DOUBLE(document, viz_radius);
 }

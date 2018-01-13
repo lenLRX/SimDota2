@@ -1,0 +1,40 @@
+{
+  "HP": 550,
+  "MP": 0,
+  "MovementSpeed": 325,
+  "Armor": 2,
+  "Attack": 21,
+  "AttackRange": 100,
+  "SightRange": 750,
+  "Bounty": 36,
+  "bountyEXP": 57,
+  "BaseAttackTime": 1,
+  "AtkPoint": 0.467,
+  "AtkBackswing": 0.533,
+  "AttackSpeed": 100,
+  "ProjectileSpeed": -1,
+  "atktype": "melee",
+  "atkDmgType": "Basic",
+  "armorType": "Basic",
+  "viz_radius": 2,
+  "Radiant": {
+    "init_loc": {
+      "x": -4899,
+      "y": -4397
+    },
+    "dest": {
+      "x": 4165,
+      "y": 3681
+    }
+  },
+  "Dire": {
+    "init_loc": {
+      "x": 4165,
+      "y": 3681
+    },
+    "dest": {
+      "x": -4899,
+      "y": -4397
+    }
+  }
+}

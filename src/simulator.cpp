@@ -10,7 +10,6 @@ cppSimulator_dealloc(cppSimulatorObject* self)
 {
     //printf("going to delete pImp\n");
     delete self->pImp;
-    delete self->pConfig;
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -37,8 +36,8 @@ cppSimulator_init(cppSimulatorObject* self, PyObject *args, PyObject *kwds) {
         Py_DECREF(Py_None);
     }
     
-    self->pConfig = new Config(config_path);
-    self->pImp = new cppSimulatorImp(self, self->pConfig, obj_canvas);
+    auto pCfg = ConfigCacheMgr<Config>::getInstance().get(config_path);
+    self->pImp = new cppSimulatorImp(self, pCfg, obj_canvas);
     //Py_XDECREF(args);
     //Py_XDECREF(kwds);
     return 0;

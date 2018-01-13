@@ -1,0 +1,40 @@
+{
+  "HP": 300,
+  "MP": 0,
+  "MovementSpeed": 325,
+  "Armor": 0,
+  "Attack": 23.5,
+  "AttackRange": 500,
+  "SightRange": 750,
+  "Bounty": 60,
+  "bountyEXP": 69,
+  "BaseAttackTime": 1,
+  "AtkPoint": 0.5,
+  "AtkBackswing": 0.67,
+  "AttackSpeed": 100,
+  "ProjectileSpeed": 900,
+  "atktype": "ranged",
+  "atkDmgType": "Pierce",
+  "armorType": "Basic",
+  "viz_radius": 2,
+  "Radiant": {
+    "init_loc": {
+      "x": -4899,
+      "y": -4397
+    },
+    "dest": {
+      "x": 4165,
+      "y": 3681
+    }
+  },
+  "Dire": {
+    "init_loc": {
+      "x": 4165,
+      "y": 3681
+    },
+    "dest": {
+      "x": -4899,
+      "y": -4397
+    }
+  }
+}
