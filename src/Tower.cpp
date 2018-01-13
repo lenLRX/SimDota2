@@ -30,6 +30,7 @@ Tower::Tower(cppSimulatorImp* _Engine,
     Side _side, std::string type_name, pos_tup init_loc)
 {
     Engine = _Engine;
+    unit_type = UNITTYPE_TOWER;
     side = _side;
     const auto& data = TowerData[type_name];
     INIT_ATTR_BY(data);
