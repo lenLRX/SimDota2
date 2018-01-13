@@ -1,6 +1,7 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
+#include <string>
 #include <tuple>
 
 enum class Side {
@@ -12,16 +13,18 @@ typedef std::tuple<double, double> pos_tup;
 
 class Config {
 public:
-    static const double tick_per_second;
-    static const double map_div;
-    static const pos_tup rad_init_pos;
-    static const pos_tup dire_init_pos;
-    static const double velocity;
-    static const double bound_length;
-    static const double windows_size;
-    static const double game2window_scale;
-    static const char* Radiant_Colors;
-    static const char* Dire_Colors;
+    Config(std::string json_path);
+    Config() = delete;
+    double tick_per_second;
+    double map_div;
+    pos_tup rad_init_pos;
+    pos_tup dire_init_pos;
+    double velocity;
+    double bound_length;
+    double windows_size;
+    double game2window_scale;
+    std::string Radiant_Colors;
+    std::string Dire_Colors;
 };
 
 #endif//__CONFIG_H__

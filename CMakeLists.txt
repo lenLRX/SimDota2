@@ -22,8 +22,11 @@ if (UNIX)
     endif (PYTHONLIBS_FOUND)
 endif(UNIX)
 
+#header only lib, just include headers
+set(RAPIDJSON_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/thirdparty/rapidjson/include")
+
 link_directories(${PYTHON_LIBRARIES})
-include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(${PYTHON_INCLUDE_DIRS} ${RAPIDJSON_INCLUDE_DIRS})
 
 include_directories(include)
 

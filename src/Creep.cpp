@@ -75,12 +75,12 @@ Creep::Creep(cppSimulatorImp* _Engine, Side _side, std::string type_name)
     if (side == Side::Radiant) {
         init_loc = pos_tup(-4899 + get_rand(), -4397 + get_rand());
         dest = pos_tup(4165 + get_rand(), 3681 + get_rand());
-        color = Config::Radiant_Colors;
+        color = GET_CFG->Radiant_Colors;
     }
     else {
         init_loc = pos_tup(4165 + get_rand(), 3681 + get_rand());
         dest = pos_tup(-4899 + get_rand(), -4397 + get_rand());
-        color = Config::Dire_Colors;
+        color = GET_CFG->Dire_Colors;
     }
 
     location = init_loc;

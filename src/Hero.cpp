@@ -53,11 +53,11 @@ Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name):target(n
     viz_radius = 5;
     if (side == Side::Radiant) {
         init_loc = pos_tup(-7205 + get_rand(), -6610 + get_rand());
-        color = Config::Radiant_Colors;
+        color = GET_CFG->Radiant_Colors;
     }
     else {
         init_loc = pos_tup(7000 + get_rand(), 6475 + get_rand());
-        color = Config::Dire_Colors;
+        color = GET_CFG->Dire_Colors;
     }
 
     location = init_loc;
@@ -168,8 +168,8 @@ PyObject* Hero::get_state_tup()
     double ally_x = 0.0;
     double ally_y = 0.0;
     for (size_t i = 0; i < ally_input_size; ++i) {
-        ally_x += sign * (std::get<0>(nearby_ally[i].first->get_location()) - std::get<0>(location)) / Config::map_div;
-        ally_y += sign * (std::get<1>(nearby_ally[i].first->get_location()) - std::get<1>(location)) / Config::map_div;
+        ally_x += sign * (std::get<0>(nearby_ally[i].first->get_location()) - std::get<0>(location)) / GET_CFG->map_div;
+        ally_y += sign * (std::get<1>(nearby_ally[i].first->get_location()) - std::get<1>(location)) / GET_CFG->map_div;
     }
 
     if (0 != ally_input_size) {
@@ -182,8 +182,8 @@ PyObject* Hero::get_state_tup()
     double enemy_x = 0.0;
     double enemy_y = 0.0;
     for (size_t i = 0; i < enemy_input_size; ++i) {
-        enemy_x += sign * (std::get<0>(nearby_enemy[i].first->get_location()) - std::get<0>(location)) / Config::map_div;
-        enemy_y += sign * (std::get<1>(nearby_enemy[i].first->get_location()) - std::get<1>(location)) / Config::map_div;
+        enemy_x += sign * (std::get<0>(nearby_enemy[i].first->get_location()) - std::get<0>(location)) / GET_CFG->map_div;
+        enemy_y += sign * (std::get<1>(nearby_enemy[i].first->get_location()) - std::get<1>(location)) / GET_CFG->map_div;
     }
 
     if (0 != enemy_input_size) {
@@ -192,8 +192,8 @@ PyObject* Hero::get_state_tup()
     }
 
     PyObject* env_state = Py_BuildValue("[dddidddddd]",
-        sign * std::get<0>(location) / Config::map_div,
-        sign * std::get<1>(location) / Config::map_div,
+        sign * std::get<0>(location) / GET_CFG->map_div,
+        sign * std::get<1>(location) / GET_CFG->map_div,
         Attack,
         side,
         ally_x,

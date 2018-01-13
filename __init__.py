@@ -4,10 +4,11 @@ import os
 #check if lib is in latest version
 class LibVersionMissMatch(Exception):
     pass
-
+_path = os.path.realpath(__file__)
+_dir = os.path.dirname(_path)
+default_cfg = os.path.join(_dir,"./config/Config.json")
 try:
-    _path = os.path.realpath(__file__)
-    _dir = os.path.dirname(_path)
+    
     src_path = os.path.join(_dir,"./src/simulator.cpp")
     with open(src_path, "r") as fp:
         _v = cppSimulator(None).get_version()
@@ -24,4 +25,5 @@ except LibVersionMissMatch as e:
 except Exception as e:
     pass
 
-Simulator = cppSimulator
+def Simulator(cfg_path = default_cfg, canvas = None):
+    return cppSimulator(cfg_path, canvas)

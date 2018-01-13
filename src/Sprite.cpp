@@ -5,6 +5,12 @@
 #include <cmath>
 #include <cstdlib>
 
+pos_tup Sprite::pos_in_wnd()
+{
+    return pos_tup(std::get<0>(location) * GET_CFG->game2window_scale * 0.5 + GET_CFG->windows_size * 0.5,
+        std::get<1>(location) * GET_CFG->game2window_scale * 0.5 + GET_CFG->windows_size * 0.5);
+}
+
 void Sprite::attack(Sprite* target)
 {
     LastAttackTime = Engine->get_time();
@@ -60,19 +66,19 @@ void Sprite::move()
     //}
 
     // Correct x-axis for out-of-bounds selection
-    if (std::get<0>(location) > Config::bound_length) {
-        location = pos_tup(Config::bound_length, std::get<1>(location));
+    if (std::get<0>(location) > GET_CFG->bound_length) {
+        location = pos_tup(GET_CFG->bound_length, std::get<1>(location));
     }
-    else if (std::get<0>(location) < -Config::bound_length) {
-        location = pos_tup(-Config::bound_length, std::get<1>(location));
+    else if (std::get<0>(location) < -GET_CFG->bound_length) {
+        location = pos_tup(-GET_CFG->bound_length, std::get<1>(location));
     }
 
     // Correct y-axis for out-of-bounds selection
-    if (std::get<1>(location) > Config::bound_length) {
-        location = pos_tup(std::get<0>(location), Config::bound_length);
+    if (std::get<1>(location) > GET_CFG->bound_length) {
+        location = pos_tup(std::get<0>(location), GET_CFG->bound_length);
     }
-    else if (std::get<1>(location) < -Config::bound_length) {
-        location = pos_tup(std::get<0>(location), -Config::bound_length);
+    else if (std::get<1>(location) < -GET_CFG->bound_length) {
+        location = pos_tup(std::get<0>(location), -GET_CFG->bound_length);
     }
 }
 

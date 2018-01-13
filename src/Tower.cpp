@@ -38,10 +38,10 @@ Tower::Tower(cppSimulatorImp* _Engine,
 
     viz_radius = 5;
     if (side == Side::Radiant) {
-        color = Config::Radiant_Colors;
+        color = GET_CFG->Radiant_Colors;
     }
     else {
-        color = Config::Dire_Colors;
+        color = GET_CFG->Dire_Colors;
     }
 
     location = init_loc;

@@ -39,6 +39,9 @@ SETATTR(data, AtkType, atktype);\
 SETATTR(data, AtkDmgType, atkDmgType);\
 SETATTR(data, ArmorType, armorType)
 
+#define GET_CFG \
+Engine->get_config()
+
 typedef std::unordered_map<std::string, std::unordered_map<std::string, void*> > SpriteDataType;
 
 class Sprite {
@@ -76,10 +79,7 @@ public:
     virtual void step() = 0;
     virtual void draw() = 0;
 
-    inline pos_tup pos_in_wnd() {
-        return pos_tup(std::get<0>(location) * Config::game2window_scale * 0.5 + Config::windows_size * 0.5,
-            std::get<1>(location) * Config::game2window_scale * 0.5 + Config::windows_size * 0.5);
-    }
+    pos_tup pos_in_wnd();
 
     void attack(Sprite* target);
     bool isAttacking();
