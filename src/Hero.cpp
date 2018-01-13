@@ -62,7 +62,8 @@ Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name)
     last_HP = data.HP;
 
     _update_para();
-    init_loc = ((HeroDataExt*)data.ext)->init_loc[(int)side];
+    HeroDataExt* p_ext = (HeroDataExt*)data.ext;
+    init_loc = p_ext->init_loc[(int)side];
     if (side == Side::Radiant) {
         color = GET_CFG->Radiant_Colors;
     }
@@ -78,10 +79,10 @@ Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name)
         pos_tup p = pos_in_wnd();
         PyObject* create_rectangle = PyObject_GetAttrString(canvas, "create_oval");
         PyObject* args = Py_BuildValue("(dddd)",
-            p.x - viz_radius,
-            p.y + viz_radius,
-            p.x + viz_radius,
-            p.y - viz_radius);
+            p.x - data.viz_radius,
+            p.y + data.viz_radius,
+            p.x + data.viz_radius,
+            p.y - data.viz_radius);
         PyObject* kwargs = Py_BuildValue("{s:s}", "fill", color.c_str());
         v_handle = PyObject_Call(create_rectangle, args, kwargs);
         Py_DECREF(kwargs);
@@ -139,10 +140,10 @@ void Hero::draw()
             "coords",
             "(Odddd)",
             v_handle,
-            p.x - viz_radius,
-            p.y + viz_radius,
-            p.x + viz_radius,
-            p.y - viz_radius));
+            p.x - data.viz_radius,
+            p.y + data.viz_radius,
+            p.x + data.viz_radius,
+            p.y - data.viz_radius));
     }
     
 }

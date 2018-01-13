@@ -15,7 +15,6 @@ private:
     pos_tup init_loc;
     pos_tup dest;
     std::string color;
-    double viz_radius;
 };
 
 #endif//__CREEP_H__

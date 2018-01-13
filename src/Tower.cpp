@@ -29,10 +29,10 @@ Tower::Tower(cppSimulatorImp* _Engine,
         pos_tup p = pos_in_wnd();
         PyObject* create_rectangle = PyObject_GetAttrString(canvas, "create_rectangle");
         PyObject* args = Py_BuildValue("(dddd)",
-            p.x - viz_radius,
-            p.y + viz_radius,
-            p.x + viz_radius,
-            p.y - viz_radius);
+            p.x - data.viz_radius,
+            p.y + data.viz_radius,
+            p.x + data.viz_radius,
+            p.y - data.viz_radius);
         PyObject* kwargs = Py_BuildValue("{s:s}", "fill", color.c_str());
         v_handle = PyObject_Call(create_rectangle, args, kwargs);
         Py_DECREF(kwargs);
