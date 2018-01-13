@@ -22,7 +22,7 @@ void Sprite::move()
     if (isDead())
         return;
 
-    if (!b_move)
+    if (!b_move || isBuilding())
         return;
 
     if (isAttacking()) {
@@ -116,7 +116,7 @@ double Sprite::attakedDmg(Sprite* attacker, double dmg)
 }
 
 
-void Sprite::dead(Sprite*  attacker)
+void Sprite::dead(Sprite* attacker)
 {
     _isDead = true;
     remove_visual_ent();

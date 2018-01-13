@@ -62,6 +62,7 @@ static int get_rand()
 Creep::Creep(cppSimulatorImp* _Engine, Side _side, std::string type_name)
 {
     Engine = _Engine;
+    unit_type = UNITTYPE_LANE_CREEP;
     side = _side;
     const auto& data = CreepData[type_name];
     INIT_ATTR_BY(data);
