@@ -204,17 +204,11 @@ PyObject* Hero::get_state_tup()
         enemy_y /= (double)enemy_input_size;
     }
 
-    PyObject* env_state = Py_BuildValue("[dddidddddd]",
+    PyObject* env_state = Py_BuildValue("[dddi]",
         sign * std::get<0>(location) / Config::map_div,
         sign * std::get<1>(location) / Config::map_div,
         Attack,
-        side,
-        ally_x,
-        ally_y,
-        (double)ally_input_size,
-        enemy_x,
-        enemy_y,
-        (double)enemy_input_size
+        side
     );
 
     if (NULL == env_state) {
