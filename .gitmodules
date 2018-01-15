@@ -1,3 +1,6 @@
 [submodule "thirdparty/rapidjson"]
 	path = thirdparty/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "thirdparty/Dota2-JSONData"]
+	path = thirdparty/Dota2-JSONData
+	url = https://github.com/pydota2/Dota2-JSONData.git
