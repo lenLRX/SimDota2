@@ -28,7 +28,7 @@ void EventFactory::CreateAttackEvnt(Sprite* attacker, Sprite* victim)
     }
     auto fn = [=]() {
         double actualDmg = victim->attakedDmg(attacker, attacker->get_Attack());
-        victim->damadged(attacker, actualDmg);
+        victim->damaged(attacker, actualDmg);
         if (vhandle)
         {
             PyObject* delete_fn = PyObject_GetAttrString(canvas, "delete");
