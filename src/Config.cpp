@@ -52,6 +52,7 @@ SpriteData::SpriteData(std::string json_path)
     }
     GET_DOUBLE(document, HP);
     MaxHP = HP;
+    GET_DOUBLE(document, BaseHPReg);
     GET_DOUBLE(document, MP);
     MaxMP = MP;
     GET_DOUBLE(document, MP);

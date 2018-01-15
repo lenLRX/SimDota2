@@ -5,6 +5,15 @@
 #include <cmath>
 #include <cstdlib>
 
+void Sprite::update_data()
+{
+    double AttackPerSecond = data.AttackSpeed * 0.01 / data.BaseAttackTime;
+    AttackTime = 1 / AttackPerSecond;
+    double dt = 1.0 / GET_CFG->tick_per_second;
+    double deltaHP = data.BaseHPReg * dt;
+    data.HP += deltaHP;
+}
+
 pos_tup Sprite::pos_in_wnd()
 {
     return pos_tup(location.x * GET_CFG->game2window_scale * 0.5 + GET_CFG->windows_size * 0.5,

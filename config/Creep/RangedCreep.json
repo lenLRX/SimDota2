@@ -1,5 +1,6 @@
 {
   "HP": 300,
+  "BaseHPReg": 2.0,
   "MP": 0,
   "MovementSpeed": 325,
   "Armor": 0,

@@ -120,6 +120,7 @@ class SpriteData
 public:
     virtual ~SpriteData() {}
     double MaxHP;
+    double BaseHPReg;
     double MaxMP;
     double HP;
     double MP;
