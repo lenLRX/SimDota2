@@ -9,7 +9,7 @@ enum PowerTreadStat
     ATTRIBUTE_STRENGTH,
     ATTRIBUTE_AGILITY,
     ATTRIBUTE_INTELLECT,
-}
+};
 
 class Item : public Ability {
 
