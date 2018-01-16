@@ -53,7 +53,7 @@ typedef std::unordered_map<std::string, std::unordered_map<std::string, void*> >
 
 class Sprite {
 public:
-    Sprite(SpriteData data) : unit_type(UNITTYPE_INVALID), LastAttackTime(-1),
+    Sprite(SpriteData data) : unit_type(UNITTYPE_INVALID), addiHPReg(0.0), LastAttackTime(-1),
         exp(0), gold(0), _isDead(false), b_move(false), canvas(NULL), v_handle(NULL), data(data) {}
 
     virtual ~Sprite(){
@@ -61,10 +61,8 @@ public:
         Py_XDECREF(v_handle);
     }
 
-    inline void _update_para() {
-        double AttackPerSecond = data.AttackSpeed * 0.01 / data.BaseAttackTime;
-        AttackTime = 1 / AttackPerSecond;
-    }
+    //update data every tick
+    virtual void update_data();
 
     virtual void step() = 0;
     virtual void draw() = 0;
@@ -108,6 +106,7 @@ protected:
     Side side;
     pos_tup location;
     UnitType unit_type;
+    double addiHPReg;//addtional HP reg: item, talent, etc 
     double LastAttackTime;
     double AttackTime;
     double exp;

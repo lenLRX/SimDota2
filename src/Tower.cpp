@@ -13,8 +13,6 @@ Tower::Tower(cppSimulatorImp* _Engine,
     unit_type = UNITTYPE_TOWER;
     side = _side;
 
-    _update_para();
-
     if (side == Side::Radiant) {
         color = GET_CFG->Radiant_Colors;
     }

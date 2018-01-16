@@ -72,8 +72,6 @@ Creep::Creep(cppSimulatorImp* _Engine, Side _side, std::string type_name)
     //random atk
     data.Attack += (distribution(rnd_gen) - 5);
 
-    _update_para();
-
     CreepDataExt* p_ext = (CreepDataExt*)data.ext;
     init_loc = p_ext->init_loc[(int)side];
     dest = p_ext->dest[(int)side];

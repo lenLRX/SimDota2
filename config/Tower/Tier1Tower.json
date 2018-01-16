@@ -1,6 +1,8 @@
 {
   "HP": 14000000,
+  "BaseHPReg": 0,
   "MP": 0,
+  "BaseMPReg": 0.0,
   "MovementSpeed": 0,
   "Armor": 14,
   "Attack": 120,

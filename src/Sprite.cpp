@@ -1,9 +1,24 @@
 #include "Sprite.h"
 #include "simulatorImp.h"
 #include "Event.h"
+#include "util.h"
 
 #include <cmath>
 #include <cstdlib>
+
+void Sprite::update_data()
+{
+    double AttackPerSecond = data.AttackSpeed * 0.01 / data.BaseAttackTime;
+    AttackTime = 1 / AttackPerSecond;
+    double dt = 1.0 / GET_CFG->tick_per_second;
+    //TODO
+    double deltaHP = data.BaseHPReg * dt;
+    data.HP += deltaHP;
+    upperBound(data.HP, data.MaxHP);
+    double deltaMP = data.BaseMPReg * dt;
+    data.MP += deltaMP;
+    upperBound(data.MP, data.MaxMP);
+}
 
 pos_tup Sprite::pos_in_wnd()
 {

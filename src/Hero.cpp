@@ -61,7 +61,6 @@ Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name)
     last_exp = 0.0;
     last_HP = data.HP;
 
-    _update_para();
     HeroDataExt* p_ext = (HeroDataExt*)data.ext;
     init_loc = p_ext->init_loc[(int)side];
     if (side == Side::Radiant) {
