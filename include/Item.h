@@ -24,7 +24,7 @@ protected:
     size_t charges;
     size_t secondary_charges;
     bool is_combined_locked;
-    size_t power_tread_stat;
+    PowerTreadStat power_tread_stat;
 };
 
 #endif //__ITEM_H__

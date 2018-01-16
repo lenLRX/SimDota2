@@ -1,6 +1,8 @@
 #ifndef __ABILITY_H__
 #define __ABILITY_H__
 
+#include <string>
+
 class Ability {
 public:
     Ability(size_t id)  { ability_id = id; }
