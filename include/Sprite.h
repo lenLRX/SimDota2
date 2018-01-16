@@ -76,7 +76,7 @@ public:
         move_target = target;
     }
     void move();
-    bool damadged(Sprite* attacker, double dmg);
+    bool damaged(Sprite* attacker, double dmg);
     double attakedDmg(Sprite* attacker, double dmg);
     void dead(Sprite*  attacker);
     void remove_visual_ent();

@@ -94,7 +94,7 @@ void Sprite::move()
     }
 }
 
-bool Sprite::damadged(Sprite* attacker, double dmg)
+bool Sprite::damaged(Sprite* attacker, double dmg)
 {
     if (isDead()) {
         return false;
