@@ -122,6 +122,7 @@ public:
     double MaxHP;
     double BaseHPReg;
     double MaxMP;
+    double BaseMPReg;
     double HP;
     double MP;
     double MovementSpeed;

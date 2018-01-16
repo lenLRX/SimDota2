@@ -55,6 +55,7 @@ SpriteData::SpriteData(std::string json_path)
     GET_DOUBLE(document, BaseHPReg);
     GET_DOUBLE(document, MP);
     MaxMP = MP;
+    GET_DOUBLE(document, BaseMPReg);
     GET_DOUBLE(document, MP);
     GET_DOUBLE(document, MovementSpeed);
     GET_DOUBLE(document, BaseAttackTime);

@@ -4,11 +4,24 @@
 #include <string>
 #include <algorithm>
 //
-std::string DirName(std::string source)
+std::string DirName(std::string source);
+
+template<typename T>
+void upperBound(T& a, const T& bound)
 {
-    std::replace(source.begin(),source.end(),'\\','/');
-    source.erase(std::find(source.rbegin(), source.rend(), '/').base(), source.end());
-    return source;
+    if (a > bound)
+    {
+        a = bound;
+    }
+}
+
+template<typename T>
+void lowerBound(T& a, const T& bound)
+{
+    if (a < bound)
+    {
+        a = bound;
+    }
 }
 
 #endif//__UTIL_H__
