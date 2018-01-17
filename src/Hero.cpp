@@ -272,7 +272,7 @@ PyObject* Hero::predefined_step()
         }
     }
     pos_tup ret;
-    int _dis = 700;
+    int _dis = 450;
     if (nearby_enemy.size() > 0)
     {
         ret = nearby_enemy[0].first->get_location();
