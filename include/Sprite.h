@@ -64,6 +64,8 @@ public:
     //update data every tick
     virtual void update_data();
 
+    virtual void update_ability() {}
+
     virtual void step() = 0;
     virtual void draw() = 0;
 
