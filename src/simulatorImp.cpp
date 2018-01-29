@@ -62,6 +62,10 @@ void cppSimulatorImp::loop()
     }
 
     for (Sprite* s : Sprites) {
+        s->update_ability();
+    }
+
+    for (Sprite* s : Sprites) {
         s->step();
     }
 

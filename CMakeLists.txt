@@ -31,8 +31,10 @@ include_directories(${PYTHON_INCLUDE_DIRS} ${RAPIDJSON_INCLUDE_DIRS})
 include_directories(include)
 
 file(GLOB HEADERS include/*.h)
+file(GLOB HEADERS include/Ability/*.h)
 
 aux_source_directory(src SRCS)
+aux_source_directory(src/Ability SRCS)
 add_library(cppSimulator SHARED ${SRCS} ${HEADERS})
 
 
