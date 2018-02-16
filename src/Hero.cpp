@@ -83,8 +83,8 @@ Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name):target(n
 
 Hero::~Hero()
 {
-    LOG << "gold:" << gold << endl;
-    Logger::getInstance().flush();
+    //LOG << "gold:" << gold << endl;
+    //Logger::getInstance().flush();
 }
 
 int Hero::get_max_health()
@@ -246,6 +246,137 @@ PyObject* Hero::get_state_tup()
     Py_DECREF(state);
 
     return ret;
+}
+
+std::vector<float> Hero::get_state_tup_native()
+{
+    int sign = side == Side::Radiant ? 1 : -1;
+
+    auto nearby_ally = Engine->get_nearby_ally(this, is_creep);
+    size_t ally_input_size = nearby_ally.size();
+    double ally_x = 0.0;
+    double ally_y = 0.0;
+    for (size_t i = 0; i < ally_input_size; ++i) {
+        ally_x += sign * (std::get<0>(nearby_ally[i].first->get_location()) - std::get<0>(location)) / Config::map_div;
+        ally_y += sign * (std::get<1>(nearby_ally[i].first->get_location()) - std::get<1>(location)) / Config::map_div;
+    }
+
+    if (0 != ally_input_size) {
+        ally_x /= (double)ally_input_size;
+        ally_y /= (double)ally_input_size;
+    }
+
+    auto nearby_enemy = Engine->get_nearby_enemy(this, is_creep);
+    size_t enemy_input_size = nearby_enemy.size();
+    double enemy_x = 0.0;
+    double enemy_y = 0.0;
+    double weakest_dist = 100000;
+    double weakest_hp = 10000;
+
+    for (size_t i = 0; i < enemy_input_size; ++i) {
+        auto pEnemy = nearby_enemy[i].first;
+        enemy_x += sign * (std::get<0>(pEnemy->get_location()) - std::get<0>(location)) / Config::map_div;
+        enemy_y += sign * (std::get<1>(pEnemy->get_location()) - std::get<1>(location)) / Config::map_div;
+        target_list.push_back(pEnemy);
+        if (pEnemy->get_HP() < weakest_hp)
+        {
+            weakest_hp = pEnemy->get_HP();
+            weakest_dist = S2Sdistance(*this, *pEnemy);
+        }
+    }
+
+    if (0 != enemy_input_size) {
+        enemy_x /= (double)enemy_input_size;
+        enemy_y /= (double)enemy_input_size;
+    }
+
+    std::vector<float> ret;
+    ret.resize(6);
+
+    ret[0] = sign * std::get<0>(location) / Config::map_div;
+    ret[1] = sign * std::get<1>(location) / Config::map_div;
+    ret[2] = Attack;
+    ret[3] = (float)side;
+    ret[4] = weakest_hp;
+    ret[5] = weakest_dist;
+
+    return ret;
+}
+
+const static float g_rad[] = {
+    -2.356194490192345f,
+    -1.5707963267948966f,
+    -0.7853981633974483f,
+    3.141592653589793f,
+    100000.0f,
+    0.0f,
+    2.356194490192345f,
+    1.5707963267948966f,
+    0.7853981633974483f
+};
+
+decisonType Hero::apply_predef_step()
+{
+    /*
+    if (isAttacking()) {
+        decision = decisonType::noop;
+        return decisonType::noop;
+    }
+    */
+    int sign = side == Side::Radiant ? 1 : -1;
+    auto nearby_enemy = Engine->get_nearby_enemy(this, is_creep);
+    auto nearby_enemy_size = nearby_enemy.size();
+    auto targetlist_size = target_list.size();
+    if (targetlist_size > 0)
+    {
+        for (int i = 0; i < targetlist_size; ++i) {
+            if (!target_list[i]->isDead() && target_list[i]->get_HP() < Attack) {
+                target = target_list[i];
+                decision = decisonType::attack;
+                return decisonType::attack;
+            }
+        }
+    }
+    pos_tup ret;
+    int _dis = 450;
+    if (nearby_enemy.size() > 0)
+    {
+        ret = nearby_enemy[0].first->get_location();
+        if (side == Side::Radiant) {
+            ret = pos_tup(std::get<0>(nearby_enemy[0].first->get_location()) - _dis,
+                std::get<1>(nearby_enemy[0].first->get_location()) - _dis);
+        }
+        else {
+            ret = pos_tup(std::get<0>(nearby_enemy[0].first->get_location()) + _dis,
+                std::get<1>(nearby_enemy[0].first->get_location()) + _dis);
+        }
+    }
+    else {
+        ret = pos_tup(-482, -400);
+    }
+
+    double dx = std::get<0>(ret) - std::get<0>(location);
+    double dy = std::get<1>(ret) - std::get<1>(location);
+    dx *= sign;
+    dy *= sign;
+
+    double a = std::atan2(dy, dx);
+    double min_d = 10000000;
+    int min_idx = -1;
+    for (int i = 0; i < 9; ++i)
+    {
+        double _d = abs(g_rad[i] - a);
+        if (_d < min_d)
+        {
+            min_idx = i;
+            min_d = _d;
+        }
+    }
+    auto dir = get_action(min_idx);
+    move_order = pos_tup(sign * dir[0] * 1000,
+        sign * dir[1] * 1000);
+    decision = decisonType::move;
+    return decisonType::move;
 }
 
 PyObject* Hero::predefined_step()

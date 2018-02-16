@@ -4,6 +4,7 @@
 #include "Sprite.h"
 
 #include <string>
+#include <vector>
 
 //forward decl;
 class cppSimulatorImp;
@@ -25,6 +26,8 @@ public:
     virtual void draw();
     void set_order(PyObject* order);
     PyObject* get_state_tup();
+    std::vector<float> get_state_tup_native();
+    decisonType apply_predef_step();
     PyObject* predefined_step();
     
     inline unsigned int get_level() { return level; }
@@ -62,5 +65,15 @@ private:
     
     std::string color;
 };
+
+static std::vector<float> get_action(int id)
+{
+    int x = id / 3;
+    int y = id / 3;
+    std::vector<float> ret;
+    ret.push_back(x - 1);
+    ret.push_back(y - 1);
+    return ret;
+}
 
 #endif//__HERO_H__

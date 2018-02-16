@@ -181,6 +181,28 @@ PyObject* cppSimulatorImp::get_state_tup(std::string side, int idx)
     }
 }
 
+std::vector<float> cppSimulatorImp::get_state_tup_native(Side side, int idx)
+{
+    if (Side::Radiant == side)
+    {
+        return RadiantHeros[idx]->get_state_tup_native();
+    }
+    else {
+        return DireHeros[idx]->get_state_tup_native();
+    }
+}
+
+int cppSimulatorImp::apply_predef_step(Side side, int idx)
+{
+    if (Side::Radiant == side)
+    {
+        return RadiantHeros[idx]->apply_predef_step();
+    }
+    else {
+        return DireHeros[idx]->apply_predef_step();
+    }
+}
+
 PyObject* cppSimulatorImp::predefined_step(std::string side, int idx) 
 {
     if (side == "Radiant") {

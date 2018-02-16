@@ -3,6 +3,8 @@
 
 #include "simulator.h"
 #include "Event.h"
+#include "DLLEXPORT.h"
+#include "Config.h"
 #include <queue>
 #include <list>
 #include <vector>
@@ -11,7 +13,7 @@
 class Hero;
 class Sprite;
 
-class cppSimulatorImp
+class DLLEXPORT cppSimulatorImp
 {
 public:
     cppSimulatorImp() = delete;
@@ -31,6 +33,8 @@ public:
     std::vector<std::pair<Sprite*, double>> get_nearby_ally(Sprite * sprite, std::function<bool(Sprite*)> filter);
     void set_order(PyObject *args, PyObject *kwds);
     PyObject* get_state_tup(std::string side, int idx);
+    std::vector<float> get_state_tup_native(Side side, int idx);
+    int apply_predef_step(Side side, int idx);
     PyObject* predefined_step(std::string side, int idx);
 private:
     cppSimulatorObject* self;

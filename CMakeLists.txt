@@ -61,4 +61,9 @@ if (WIN32)
     "$<TARGET_FILE_DIR:cppSimulator>/cppSimulator${LIB_SUFFIX}"
     "${CMAKE_SOURCE_DIR}/cppSimulator${LIB_SUFFIX}"              
     )
+	add_custom_command(TARGET cppSimulator POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "$<TARGET_FILE_DIR:cppSimulator>/cppSimulator${LIB_SUFFIX}"
+    "$<TARGET_FILE_DIR:cppSimulator>/cppSimulator.dll"
+    )
 endif (WIN32)
