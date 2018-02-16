@@ -194,21 +194,35 @@ PyObject* Hero::get_state_tup()
     size_t enemy_input_size = nearby_enemy.size();
     double enemy_x = 0.0;
     double enemy_y = 0.0;
+    double weakest_dist = 100000;
+    double weakest_hp = 10000;
+
     for (size_t i = 0; i < enemy_input_size; ++i) {
-        enemy_x += sign * (std::get<0>(nearby_enemy[i].first->get_location()) - std::get<0>(location)) / Config::map_div;
-        enemy_y += sign * (std::get<1>(nearby_enemy[i].first->get_location()) - std::get<1>(location)) / Config::map_div;
+        auto pEnemy = nearby_enemy[i].first;
+        enemy_x += sign * (std::get<0>(pEnemy->get_location()) - std::get<0>(location)) / Config::map_div;
+        enemy_y += sign * (std::get<1>(pEnemy->get_location()) - std::get<1>(location)) / Config::map_div;
+        target_list.push_back(pEnemy);
+        if (pEnemy->get_HP() < weakest_hp)
+        {
+            weakest_hp = pEnemy->get_HP();
+            weakest_dist = S2Sdistance(*this, *pEnemy);
+        }
     }
 
     if (0 != enemy_input_size) {
         enemy_x /= (double)enemy_input_size;
         enemy_y /= (double)enemy_input_size;
+        weakest_hp = 0;
+        weakest_dist = 0;
     }
 
-    PyObject* env_state = Py_BuildValue("[dddi]",
+    PyObject* env_state = Py_BuildValue("[dddidd]",
         sign * std::get<0>(location) / Config::map_div,
         sign * std::get<1>(location) / Config::map_div,
         Attack,
-        side
+        side,
+        weakest_hp / 1000,
+        weakest_dist / Config::map_div
     );
 
     if (NULL == env_state) {
