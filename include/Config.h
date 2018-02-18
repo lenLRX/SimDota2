@@ -24,4 +24,18 @@ public:
     static const char* Dire_Colors;
 };
 
+enum decisonType {
+    noop = 0,
+    move = 1,
+    attack = 2
+};
+
+class DecisionTuple
+{
+public:
+    decisonType dtype;
+    int targetIdx;
+    int moveDir;
+};
+
 #endif//__CONFIG_H__

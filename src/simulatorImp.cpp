@@ -181,7 +181,7 @@ PyObject* cppSimulatorImp::get_state_tup(std::string side, int idx)
     }
 }
 
-std::vector<float> cppSimulatorImp::get_state_tup_native(Side side, int idx)
+std::map<std::string, std::vector<float>> cppSimulatorImp::get_state_tup_native(Side side, int idx)
 {
     if (Side::Radiant == side)
     {
@@ -192,7 +192,7 @@ std::vector<float> cppSimulatorImp::get_state_tup_native(Side side, int idx)
     }
 }
 
-int cppSimulatorImp::apply_predef_step(Side side, int idx)
+DecisionTuple cppSimulatorImp::apply_predef_step(Side side, int idx)
 {
     if (Side::Radiant == side)
     {

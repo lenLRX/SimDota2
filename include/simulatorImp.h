@@ -8,6 +8,7 @@
 #include <queue>
 #include <list>
 #include <vector>
+#include <map>
 
 //forward decl
 class Hero;
@@ -33,8 +34,8 @@ public:
     std::vector<std::pair<Sprite*, double>> get_nearby_ally(Sprite * sprite, std::function<bool(Sprite*)> filter);
     void set_order(PyObject *args, PyObject *kwds);
     PyObject* get_state_tup(std::string side, int idx);
-    std::vector<float> get_state_tup_native(Side side, int idx);
-    int apply_predef_step(Side side, int idx);
+    std::map<std::string, std::vector<float>> get_state_tup_native(Side side, int idx);
+    DecisionTuple apply_predef_step(Side side, int idx);
     PyObject* predefined_step(std::string side, int idx);
 private:
     cppSimulatorObject* self;

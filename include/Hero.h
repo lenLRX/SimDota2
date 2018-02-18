@@ -5,15 +5,10 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 //forward decl;
 class cppSimulatorImp;
-
-enum decisonType {
-    noop = 0,
-    move = 1,
-    attack = 2
-};
 
 using target_list_t = std::vector<Sprite*>;
 
@@ -26,8 +21,8 @@ public:
     virtual void draw();
     void set_order(PyObject* order);
     PyObject* get_state_tup();
-    std::vector<float> get_state_tup_native();
-    decisonType apply_predef_step();
+    std::map<std::string, std::vector<float>> get_state_tup_native();
+    DecisionTuple apply_predef_step();
     PyObject* predefined_step();
     
     inline unsigned int get_level() { return level; }

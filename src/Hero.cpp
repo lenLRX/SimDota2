@@ -194,9 +194,19 @@ PyObject* Hero::get_state_tup()
     size_t enemy_input_size = nearby_enemy.size();
     double enemy_x = 0.0;
     double enemy_y = 0.0;
+    double weakest_dist = 100000;
+    double weakest_hp = 10000;
+
     for (size_t i = 0; i < enemy_input_size; ++i) {
-        enemy_x += sign * (std::get<0>(nearby_enemy[i].first->get_location()) - std::get<0>(location)) / Config::map_div;
-        enemy_y += sign * (std::get<1>(nearby_enemy[i].first->get_location()) - std::get<1>(location)) / Config::map_div;
+        auto pEnemy = nearby_enemy[i].first;
+        enemy_x += sign * (std::get<0>(pEnemy->get_location()) - std::get<0>(location)) / Config::map_div;
+        enemy_y += sign * (std::get<1>(pEnemy->get_location()) - std::get<1>(location)) / Config::map_div;
+        target_list.push_back(pEnemy);
+        if (pEnemy->get_HP() < weakest_hp)
+        {
+            weakest_hp = pEnemy->get_HP();
+            weakest_dist = S2Sdistance(*this, *pEnemy);
+        }
     }
 
     if (0 != enemy_input_size) {
@@ -204,11 +214,57 @@ PyObject* Hero::get_state_tup()
         enemy_y /= (double)enemy_input_size;
     }
 
-    PyObject* env_state = Py_BuildValue("[dddi]",
+    if (enemy_input_size > 0)
+    {
+        weakest_hp = weakest_hp / 1000;
+        weakest_dist = weakest_dist / Config::map_div;
+    }
+    else
+    {
+        weakest_hp = 2;
+        weakest_dist = 2;
+    }
+
+    double nearest_ally_x;
+    double nearest_ally_y;
+
+    if (ally_input_size > 0)
+    {
+        auto pAlly = nearby_ally[0].first;
+        nearest_ally_x = sign * (std::get<0>(pAlly->get_location()) - std::get<0>(location)) / Config::map_div;
+        nearest_ally_y = sign * (std::get<1>(pAlly->get_location()) - std::get<1>(location)) / Config::map_div;
+    }
+    else
+    {
+        nearest_ally_x = 2;
+        nearest_ally_y = 2;
+    }
+
+    double nearest_enemy_x;
+    double nearest_enemy_y;
+    if (enemy_input_size > 0)
+    {
+        auto pEnemy = nearby_enemy[0].first;
+        nearest_enemy_x = sign * (std::get<0>(pEnemy->get_location()) - std::get<0>(location)) / Config::map_div;
+        nearest_enemy_y = sign * (std::get<1>(pEnemy->get_location()) - std::get<1>(location)) / Config::map_div;
+    }
+    else
+    {
+        nearest_enemy_x = 2;
+        nearest_enemy_y = 2;
+    }
+
+    PyObject* env_state = Py_BuildValue("[dddidddddd]",
         sign * std::get<0>(location) / Config::map_div,
         sign * std::get<1>(location) / Config::map_div,
         Attack,
-        side
+        side,
+        weakest_hp,
+        weakest_dist,
+        nearest_ally_x,
+        nearest_ally_y,
+        nearest_enemy_x,
+        nearest_enemy_y
     );
 
     if (NULL == env_state) {
@@ -248,8 +304,9 @@ PyObject* Hero::get_state_tup()
     return ret;
 }
 
-std::vector<float> Hero::get_state_tup_native()
+std::map<std::string, std::vector<float>> Hero::get_state_tup_native()
 {
+    std::map<std::string, std::vector<float>> result;
     int sign = side == Side::Radiant ? 1 : -1;
 
     auto nearby_ally = Engine->get_nearby_ally(this, is_creep);
@@ -288,19 +345,58 @@ std::vector<float> Hero::get_state_tup_native()
     if (0 != enemy_input_size) {
         enemy_x /= (double)enemy_input_size;
         enemy_y /= (double)enemy_input_size;
+        weakest_hp = 0;
+        weakest_dist = 0;
     }
 
-    std::vector<float> ret;
-    ret.resize(6);
+    std::vector<float> env_state;
+    env_state.resize(6);
 
-    ret[0] = sign * std::get<0>(location) / Config::map_div;
-    ret[1] = sign * std::get<1>(location) / Config::map_div;
-    ret[2] = Attack;
-    ret[3] = (float)side;
-    ret[4] = weakest_hp;
-    ret[5] = weakest_dist;
+    env_state[0] = sign * std::get<0>(location) / Config::map_div;
+    env_state[1] = sign * std::get<1>(location) / Config::map_div;
+    env_state[2] = Attack;
+    env_state[3] = (float)side;
+    if (enemy_input_size > 0)
+    {
+        env_state[4] = weakest_hp / 1000;
+        env_state[5] = weakest_dist / Config::map_div;
+    }
+    else
+    {
+        env_state[4] = 2;
+        env_state[5] = 2;
+    }
+    
+    result["env_state"] = env_state;
 
-    return ret;
+    std::vector<float> move_state = env_state;
+
+    if (ally_input_size > 0)
+    {
+        auto pAlly = nearby_ally[0].first;
+        move_state.push_back(sign * (std::get<0>(pAlly->get_location()) - std::get<0>(location)) / Config::map_div);
+        move_state.push_back(sign * (std::get<1>(pAlly->get_location()) - std::get<1>(location)) / Config::map_div);
+    }
+    else
+    {
+        move_state.push_back(2);
+        move_state.push_back(2);
+    }
+
+    if (enemy_input_size > 0)
+    {
+        auto pEnemy = nearby_enemy[0].first;
+        move_state.push_back(sign * (std::get<0>(pEnemy->get_location()) - std::get<0>(location)) / Config::map_div);
+        move_state.push_back(sign * (std::get<1>(pEnemy->get_location()) - std::get<1>(location)) / Config::map_div);
+    }
+    else
+    {
+        move_state.push_back(2);
+        move_state.push_back(2);
+    }
+
+    result["move_state"] = move_state;
+    return result;
 }
 
 const static float g_rad[] = {
@@ -315,7 +411,7 @@ const static float g_rad[] = {
     0.7853981633974483f
 };
 
-decisonType Hero::apply_predef_step()
+DecisionTuple Hero::apply_predef_step()
 {
     /*
     if (isAttacking()) {
@@ -327,13 +423,16 @@ decisonType Hero::apply_predef_step()
     auto nearby_enemy = Engine->get_nearby_enemy(this, is_creep);
     auto nearby_enemy_size = nearby_enemy.size();
     auto targetlist_size = target_list.size();
+    DecisionTuple result;
     if (targetlist_size > 0)
     {
         for (int i = 0; i < targetlist_size; ++i) {
             if (!target_list[i]->isDead() && target_list[i]->get_HP() < Attack) {
                 target = target_list[i];
                 decision = decisonType::attack;
-                return decisonType::attack;
+                result.dtype = decisonType::attack;
+                result.targetIdx = i;
+                return result;
             }
         }
     }
@@ -376,7 +475,9 @@ decisonType Hero::apply_predef_step()
     move_order = pos_tup(sign * dir[0] * 1000,
         sign * dir[1] * 1000);
     decision = decisonType::move;
-    return decisonType::move;
+    result.dtype = decisonType::move;
+    result.moveDir = min_idx;
+    return result;
 }
 
 PyObject* Hero::predefined_step()
