@@ -212,6 +212,8 @@ PyObject* Hero::get_state_tup()
     if (0 != enemy_input_size) {
         enemy_x /= (double)enemy_input_size;
         enemy_y /= (double)enemy_input_size;
+        weakest_hp = 0;
+        weakest_dist = 0;
     }
 
     if (enemy_input_size > 0)
