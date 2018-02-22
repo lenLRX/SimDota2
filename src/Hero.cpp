@@ -104,7 +104,7 @@ void Hero::step()
     if (isAttacking())
         return;
     if (decisonType::noop == decision) {
-        ;
+        b_move = false;
     }
     else if (decisonType::move == decision) {
         auto p = pos_tup(std::get<0>(move_order) + std::get<0>(location),
@@ -402,15 +402,15 @@ std::map<std::string, std::vector<float>> Hero::get_state_tup_native()
 }
 
 const static float g_rad[] = {
-    -2.356194490192345f,
-    -1.5707963267948966f,
-    -0.7853981633974483f,
-    3.141592653589793f,
-    100000.0f,
-    0.0f,
-    2.356194490192345f,
-    1.5707963267948966f,
-    0.7853981633974483f
+    -2.356194490192345,
+    3.141592653589793,
+    2.356194490192345,
+    -1.5707963267948966,
+    100000,
+    1.5707963267948966,
+    -0.7853981633974483,
+    0.0,
+    0.7853981633974483
 };
 
 DecisionTuple Hero::apply_predef_step()
@@ -506,7 +506,7 @@ PyObject* Hero::predefined_step()
         }
     }
     pos_tup ret;
-    int _dis = 450;
+    int _dis = 300;
     if (nearby_enemy.size() > 0)
     {
         ret = nearby_enemy[0].first->get_location();
@@ -527,6 +527,14 @@ PyObject* Hero::predefined_step()
     double dy = std::get<1>(ret) - std::get<1>(location);
     dx *= sign;
     dy *= sign;
+
+    if (hypot(dx, dy) < 200)
+    {
+        printf("near\n");
+        Py_INCREF(Py_None);
+        PyObject* obj = Py_BuildValue("(iO)", decisonType::noop, Py_None);
+        return obj;
+    }
 
     double a = std::atan2(dy, dx);
     PyObject* obj = Py_BuildValue("(i(dd))", decisonType::move, std::cos(a), std::sin(a));
