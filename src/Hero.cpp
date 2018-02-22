@@ -530,7 +530,6 @@ PyObject* Hero::predefined_step()
 
     if (hypot(dx, dy) < 200)
     {
-        printf("near\n");
         Py_INCREF(Py_None);
         PyObject* obj = Py_BuildValue("(iO)", decisonType::noop, Py_None);
         return obj;
