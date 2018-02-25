@@ -124,7 +124,7 @@ void Sprite::dead(Sprite* attacker)
         if (s->side != side) {
             double dis = S2Sdistance(*s, *this);
             if (dis <= 1300.0) {
-                s->exp += bountyEXP;
+                s->exp += bountyEXP * (1 - dis / 1300.0);
             }
             //else {
             //    s->exp += bountyEXP * (dis - 1300 + 1) / Config::map_div * 0.1;
