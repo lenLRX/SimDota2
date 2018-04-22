@@ -49,15 +49,15 @@ protected:
     //size_t slot;
     size_t level;
     size_t cast_range;
-    float channel_time;
-    float cooldown_remaining;
+    double channel_time;
+    double cooldown_remaining;
+    double ManaCost;
     
     bool is_activated;
     bool is_toggled;
     bool is_in_ability_phase;
     bool is_channeling;
     bool is_stolen;
-private:
     float lastActivatedTime;
     float cd;//tmp var
     cppSimulatorImp* engine;

@@ -1,6 +1,7 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
-
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <string>
 #include <tuple>
 #include <map>
@@ -31,6 +32,22 @@ class pos_tup
 public:
     pos_tup(double x = 0, double y = 0)
         :x(x), y(y){}
+    pos_tup operator + (const pos_tup& other)
+    {
+        return pos_tup(x + other.x, y + other.y);
+    }
+
+    pos_tup operator * (double m)
+    {
+        return pos_tup(x * m, y * m);
+    }
+
+    static pos_tup unit(double rad)
+    {
+        rad = fmod(rad, M_PI);
+        return pos_tup(cos(rad), sin(rad));
+    }
+
     double x;
     double y;
 };

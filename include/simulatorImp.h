@@ -12,6 +12,8 @@ class Hero;
 class Sprite;
 class Config;
 
+typedef std::vector<std::pair<Sprite*, double>> VecSpriteDist;
+
 class cppSimulatorImp
 {
 public:
@@ -27,10 +29,11 @@ public:
     inline double get_deltatick() const { return delta_tick; }
     inline std::priority_queue<Event>& get_queue() { return queue; }
     void loop();
-    std::vector<std::pair<Sprite*, double>> get_nearby_enemy(Sprite* s);
-    std::vector<std::pair<Sprite*, double>> get_nearby_enemy(Sprite * sprite, std::function<bool(Sprite*)> filter);
-    std::vector<std::pair<Sprite*, double>> get_nearby_ally(Sprite* s);
-    std::vector<std::pair<Sprite*, double>> get_nearby_ally(Sprite * sprite, std::function<bool(Sprite*)> filter);
+    VecSpriteDist get_nearby_enemy(Sprite* s, double dist);
+    VecSpriteDist get_nearby_enemy(Sprite * sprite, double dist, std::function<bool(Sprite*)> filter);
+    VecSpriteDist get_nearby_ally(Sprite* s, double dist);
+    VecSpriteDist get_nearby_ally(Sprite * sprite, double dist, std::function<bool(Sprite*)> filter);
+    VecSpriteDist get_nearby_sprite(pos_tup loc,double dist);
     void set_order(PyObject *args, PyObject *kwds);
     PyObject* get_state_tup(std::string side, int idx);
     PyObject* predefined_step(std::string side, int idx);

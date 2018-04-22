@@ -8,7 +8,7 @@ bool Ability::isFullyCastable()
 
 bool Ability::isReady()
 {
-    return engine->get_time() - lastActivatedTime > cd;;
+    return engine->get_time() - lastActivatedTime > cd;
 }
 
 void Ability::activate()

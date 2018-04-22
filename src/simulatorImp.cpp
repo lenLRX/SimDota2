@@ -87,31 +87,31 @@ void cppSimulatorImp::loop()
     }
 }
 
-std::vector<std::pair<Sprite*, double>> cppSimulatorImp::get_nearby_enemy(Sprite * sprite)
+VecSpriteDist cppSimulatorImp::get_nearby_enemy(Sprite * sprite, double dist)
 {
     std::vector<std::pair<Sprite*, double>> ret;
     for (Sprite* s : Sprites) {
         if (s->get_side() != sprite->get_side() && s != sprite) {
             double d = Sprite::S2Sdistance(*s, *sprite);
-            if (d < sprite->get_SightRange()) {
+            if (d < dist) {
                 ret.push_back(std::make_pair(s, d));
             }
         }
     }
-    auto sort_fn = [](const std::pair<Sprite*, double>& l, const std::pair<Sprite*, double>&r)->bool {
+    const static auto sort_fn = [](const std::pair<Sprite*, double>& l, const std::pair<Sprite*, double>&r)->bool {
         return l.second < r.second;
     };
     std::sort(ret.begin(), ret.end(), sort_fn);
     return ret;
 }
 
-std::vector<std::pair<Sprite*, double>> cppSimulatorImp::get_nearby_enemy(Sprite * sprite,std::function<bool(Sprite*)> filter)
+VecSpriteDist cppSimulatorImp::get_nearby_enemy(Sprite * sprite, double dist, std::function<bool(Sprite*)> filter)
 {
     std::vector<std::pair<Sprite*, double>> ret;
     for (Sprite* s : Sprites) {
         if (s->get_side() != sprite->get_side() && s != sprite && filter(s)) {
             double d = Sprite::S2Sdistance(*s, *sprite);
-            if (d < sprite->get_SightRange()) {
+            if (d < dist) {
                 ret.push_back(std::make_pair(s, d));
             }
         }
@@ -123,14 +123,14 @@ std::vector<std::pair<Sprite*, double>> cppSimulatorImp::get_nearby_enemy(Sprite
     return ret;
 }
 
-std::vector<std::pair<Sprite*, double>> cppSimulatorImp::get_nearby_ally(Sprite * sprite)
+VecSpriteDist cppSimulatorImp::get_nearby_ally(Sprite * sprite, double dist)
 {
     std::vector<std::pair<Sprite*, double>> ret;
     for (Sprite* s : Sprites) {
         if (s->get_side() == sprite->get_side()
             && s != sprite) {
             double d = Sprite::S2Sdistance(*s, *sprite);
-            if (d < sprite->get_SightRange()) {
+            if (d < dist) {
                 ret.push_back(std::make_pair(s, d));
             }
         }
@@ -142,14 +142,14 @@ std::vector<std::pair<Sprite*, double>> cppSimulatorImp::get_nearby_ally(Sprite 
     return ret;
 }
 
-std::vector<std::pair<Sprite*, double>> cppSimulatorImp::get_nearby_ally(Sprite * sprite, std::function<bool(Sprite*)> filter)
+VecSpriteDist cppSimulatorImp::get_nearby_ally(Sprite * sprite, double dist, std::function<bool(Sprite*)> filter)
 {
     std::vector<std::pair<Sprite*, double>> ret;
     for (Sprite* s : Sprites) {
         if (s->get_side() == sprite->get_side()
             && s != sprite && filter(s)) {
             double d = Sprite::S2Sdistance(*s, *sprite);
-            if (d < sprite->get_SightRange()) {
+            if (d < dist) {
                 ret.push_back(std::make_pair(s, d));
             }
         }
