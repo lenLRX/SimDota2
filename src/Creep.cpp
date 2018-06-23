@@ -112,7 +112,7 @@ void Creep::step()
         return;
     if (isAttacking())
         return;
-    auto nearby_enemy = Engine->get_nearby_enemy(this);
+    auto nearby_enemy = Engine->get_nearby_enemy(this, data.SightRange);
     if (!nearby_enemy.empty()) {
         Sprite* target = nearby_enemy.front().first;
         if (nearby_enemy.front().second < data.AttackRange) {

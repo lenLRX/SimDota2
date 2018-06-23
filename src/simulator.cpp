@@ -2,8 +2,9 @@
 #include "simulatorImp.h"
 #include "log.h"
 #include "Config.h"
+#include "FeatureRepresentation/FeatureRepresentation.h"
 
-#define __ENGINE_VERSION__ "0.0.7"
+#define __ENGINE_VERSION__ "0.1.0"
 
 static void
 cppSimulator_dealloc(cppSimulatorObject* self)
@@ -28,7 +29,8 @@ cppSimulator_init(cppSimulatorObject* self, PyObject *args, PyObject *kwds) {
     //printf("initing simulator\n");
     PyObject* obj_canvas = NULL;
     char* config_path = NULL;
-    if (!PyArg_ParseTuple(args, "s|O",&config_path ,&obj_canvas)) {
+    char* feature_name = NULL;
+    if (!PyArg_ParseTuple(args, "ss|O",&config_path, feature_name, &obj_canvas)) {
         return -1;
     }
     if (obj_canvas == Py_None) {
@@ -37,7 +39,7 @@ cppSimulator_init(cppSimulatorObject* self, PyObject *args, PyObject *kwds) {
     }
     
     auto pCfg = ConfigCacheMgr<Config>::getInstance().get(config_path);
-    self->pImp = new cppSimulatorImp(self, pCfg, obj_canvas);
+    self->pImp = new cppSimulatorImp(self, feature_name, pCfg, obj_canvas);
     //Py_XDECREF(args);
     //Py_XDECREF(kwds);
     return 0;
@@ -76,7 +78,7 @@ cppSimulator_get_state_tup(cppSimulatorObject* self, PyObject *args, PyObject *k
     }
     //Py_XDECREF(args);
     //Py_XDECREF(kwds);
-    return self->pImp->get_state_tup(side, idx);
+    return self->pImp->getState(side, idx);
 }
 
 static PyObject*

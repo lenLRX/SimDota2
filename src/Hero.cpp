@@ -179,13 +179,11 @@ void Hero::set_order(PyObject* order)
     
 }
 
-static auto is_creep = [](Sprite* s) -> bool { return dynamic_cast<Creep*>(s) != nullptr; };
-
 PyObject* Hero::get_state_tup()
 {
     int sign = side == Side::Radiant ? 1 : -1 ;
     
-    auto nearby_ally = Engine->get_nearby_ally(this, is_creep);
+    auto nearby_ally = Engine->get_nearby_ally(this, data.SightRange, is_creep);
     size_t ally_input_size = nearby_ally.size();
     double ally_x = 0.0;
     double ally_y = 0.0;
@@ -200,7 +198,7 @@ PyObject* Hero::get_state_tup()
         ally_y /= (double)ally_input_size;
     }
 
-    auto nearby_enemy = Engine->get_nearby_enemy(this, is_creep);
+    auto nearby_enemy = Engine->get_nearby_enemy(this, data.SightRange, is_creep);
     size_t enemy_input_size = nearby_enemy.size();
     double enemy_x = 0.0;
     double enemy_y = 0.0;
@@ -277,7 +275,7 @@ PyObject* Hero::predefined_step()
     }
     */
     int sign = side == Side::Radiant ? 1 : -1;
-    auto nearby_enemy = Engine->get_nearby_enemy(this, is_creep);
+    auto nearby_enemy = Engine->get_nearby_enemy(this, data.SightRange, is_creep);
     auto nearby_enemy_size = nearby_enemy.size();
     auto targetlist_size = target_list.size();
     if (targetlist_size > 0)

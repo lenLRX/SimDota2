@@ -7,9 +7,10 @@
 
 #include <algorithm>
 
-cppSimulatorImp::cppSimulatorImp(cppSimulatorObject* obj,Config* cfg, PyObject* canvas)
+cppSimulatorImp::cppSimulatorImp(cppSimulatorObject* obj, const std::string& featureName,
+    Config* cfg, PyObject* canvas)
     :self(obj), cfg(cfg), tick_time(0.0), tick_per_second(cfg->tick_per_second),
-    delta_tick(1.0 / cfg->tick_per_second), canvas(canvas)
+    delta_tick(1.0 / cfg->tick_per_second), canvas(canvas), featureCfg(featureName)
 {
     EventFactory::CreateSpawnEvnt(this);
     Tower::initTowers(this);
@@ -179,13 +180,27 @@ void cppSimulatorImp::set_order(PyObject * args, PyObject * kwds)
     }
 }
 
-PyObject* cppSimulatorImp::get_state_tup(std::string side, int idx)
+PyObject* cppSimulatorImp::getState(const std::string& side, int idx)
+{
+    if (featureCfg)
+    {
+        return featureCfg.getState(this, side, idx);
+    }
+    else
+    {
+        LOG << "fatal error!getState without setting featureCfg" << std::endl;
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
+}
+
+Hero* cppSimulatorImp::getHero(const std::string& side, int idx)
 {
     if (side == "Radiant") {
-        return RadiantHeros[idx]->get_state_tup();
+        return RadiantHeros[idx];
     }
     else {
-        return DireHeros[idx]->get_state_tup();
+        return DireHeros[idx];
     }
 }
 

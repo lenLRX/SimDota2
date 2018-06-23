@@ -17,4 +17,6 @@ private:
     std::string color;
 };
 
+static auto is_creep = [](Sprite* s) -> bool { return dynamic_cast<Creep*>(s) != nullptr; };
+
 #endif//__CREEP_H__

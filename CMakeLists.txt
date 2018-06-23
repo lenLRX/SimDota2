@@ -35,6 +35,7 @@ file(GLOB HEADERS include/Ability/*.h)
 
 aux_source_directory(src SRCS)
 aux_source_directory(src/Ability SRCS)
+aux_source_directory(src/FeatureRepresentation SRCS)
 add_library(cppSimulator SHARED ${SRCS} ${HEADERS})
 
 

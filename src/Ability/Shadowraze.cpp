@@ -17,5 +17,5 @@ void Shadowraze::activate_i()
     sprite->cost_MP(ManaCost);
     lastActivatedTime = engine->get_time();
 
-    const auto& nearbyEnemy = engine->get_nearby_enemy();
+    const auto& nearbyEnemy = engine->get_nearby_enemy(sprite, 700);
 }

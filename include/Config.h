@@ -1,7 +1,7 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 #define _USE_MATH_DEFINES
-#include <cmath>
+#include <math.h>
 #include <string>
 #include <tuple>
 #include <map>

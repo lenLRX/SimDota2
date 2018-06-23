@@ -90,7 +90,7 @@ public:
     inline UnitType get_UnitType() { return unit_type; }
 
     inline void cost_MP(double m) { data.MP -= m; data.MP = data.MP > 0 ? data.MP : 0; }
-
+    inline const SpriteData& getData() const { return data; }
     inline double get_HP() { return data.HP; }
     inline double get_AttackTime() { return data.AttackTime; }
     inline double get_Attack() { return data.Attack; }

@@ -3,6 +3,8 @@
 
 #include "simulator.h"
 #include "Event.h"
+#include "FeatureRepresentation/FeatureRepresentation.h"
+
 #include <queue>
 #include <list>
 #include <vector>
@@ -18,7 +20,7 @@ class cppSimulatorImp
 {
 public:
     cppSimulatorImp() = delete;
-    cppSimulatorImp(cppSimulatorObject* obj,Config* cfg ,PyObject* canvas = nullptr);
+    cppSimulatorImp(cppSimulatorObject* obj, const std::string& featureName, Config* cfg ,PyObject* canvas = nullptr);
     ~cppSimulatorImp();
     inline Config* get_config() { return cfg; }
     double get_time();
@@ -35,10 +37,12 @@ public:
     VecSpriteDist get_nearby_ally(Sprite * sprite, double dist, std::function<bool(Sprite*)> filter);
     VecSpriteDist get_nearby_sprite(pos_tup loc,double dist);
     void set_order(PyObject *args, PyObject *kwds);
-    PyObject* get_state_tup(std::string side, int idx);
+    PyObject* getState(const std::string& side, int idx);
+    Hero* getHero(const std::string& side, int idx);
     PyObject* predefined_step(std::string side, int idx);
 private:
     cppSimulatorObject* self;
+    FeatureConfig featureCfg;
     Config* cfg;
     double tick_time;
     double tick_per_second;
