@@ -26,4 +26,4 @@ except Exception as e:
     pass
 
 def Simulator(cfg_path = default_cfg, canvas = None):
-    return cppSimulator(cfg_path, canvas)
+    return cppSimulator(cfg_path, '', canvas)

@@ -30,7 +30,7 @@ cppSimulator_init(cppSimulatorObject* self, PyObject *args, PyObject *kwds) {
     PyObject* obj_canvas = NULL;
     char* config_path = NULL;
     char* feature_name = NULL;
-    if (!PyArg_ParseTuple(args, "ss|O",&config_path, feature_name, &obj_canvas)) {
+    if (!PyArg_ParseTuple(args, "ss|O",&config_path, &feature_name, &obj_canvas)) {
         return -1;
     }
     if (obj_canvas == Py_None) {
