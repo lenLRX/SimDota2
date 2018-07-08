@@ -176,7 +176,7 @@ static PyModuleDef cppSimulatorModule = {
 PyMODINIT_FUNC
 PyInit_cppSimulator(void)
 {
-    Logger::getInstance().redirectStream("log/cpplog.txt");
+    //Logger::getInstance().redirectStream("log/cpplog.txt");
     PyObject* m;
 
     cppSimulatorType.tp_new = PyType_GenericNew;

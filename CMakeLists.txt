@@ -23,6 +23,7 @@ include_directories(include)
 
 file(GLOB HEADERS include/*.h)
 file(GLOB HEADERS include/Ability/*.h)
+file(GLOB HEADERS include/FeatureRepresentation/*.h)
 
 aux_source_directory(src SRCS)
 aux_source_directory(src/Ability SRCS)

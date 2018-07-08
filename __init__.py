@@ -25,5 +25,5 @@ except LibVersionMissMatch as e:
 except Exception as e:
     pass
 
-def Simulator(cfg_path = default_cfg, canvas = None):
-    return cppSimulator(cfg_path, '', canvas)
+def Simulator(cfg_path=default_cfg, feature_name='origin1', canvas=None):
+    return cppSimulator(cfg_path, feature_name, canvas)
