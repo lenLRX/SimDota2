@@ -16,7 +16,7 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
     const auto& data = hero->getData();
     const auto& location = hero->get_location();
 
-    auto nearby_ally = Engine->get_nearby_ally(hero, data.SightRange, is_creep);
+    auto nearby_ally = Engine->get_nearby_ally(hero, data.SightRange);
     size_t ally_input_size = nearby_ally.size();
 
     std::vector<PyObject*> vec_feature;
@@ -35,7 +35,7 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
             ONEHOT_ALLY));
     }
 
-    auto nearby_enemy = Engine->get_nearby_enemy(hero, data.SightRange, is_creep);
+    auto nearby_enemy = Engine->get_nearby_enemy(hero, data.SightRange);
     size_t enemy_input_size = nearby_enemy.size();
 
     for (size_t i = 0; i < enemy_input_size; ++i) {

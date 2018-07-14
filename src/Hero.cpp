@@ -275,7 +275,7 @@ PyObject* Hero::predefined_step()
     }
     */
     int sign = side == Side::Radiant ? 1 : -1;
-    auto nearby_enemy = Engine->get_nearby_enemy(this, data.SightRange, is_creep);
+    auto nearby_enemy = Engine->get_nearby_enemy(this, data.SightRange);
     auto nearby_enemy_size = nearby_enemy.size();
     auto targetlist_size = target_list.size();
     if (targetlist_size > 0)
