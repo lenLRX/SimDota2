@@ -34,6 +34,16 @@ public:
         {
             LOG << "ActionSpaceConfig " << actionSpaceName << " not found" << std::endl;
         }
+
+        auto pdIt = predefineActionRegisty.find(actionSpaceName);
+        if (pdIt != predefineActionRegisty.end())
+        {
+            predefineAction = pdIt->second;
+        }
+        else
+        {
+            LOG << "ActionSpaceConfig " << actionSpaceName << " not found" << std::endl;
+        }
     }
 
     void applyAction(cppSimulatorImp* engine, PyObject* action, const std::string& side, int idx)

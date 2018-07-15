@@ -23,7 +23,7 @@ static void setAction(cppSimulatorImp* Engine, PyObject* order, const std::strin
             LOG << "Parse Arg error";
             return;
         }
-        hero->set_move(pos_tup(sign * x * 1000,
+        hero->set_move_order(pos_tup(sign * x * 1000,
             sign * y * 1000));
     }
     else if (decisonType::attack == decision) {

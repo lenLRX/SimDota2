@@ -24,6 +24,7 @@ public:
     virtual void step();
     virtual void draw();
     void set_order(PyObject* order);
+    void set_move_order(const pos_tup& order);
     void set_decision(int decision);
     void set_target(Sprite* s);
     PyObject* get_state_tup();

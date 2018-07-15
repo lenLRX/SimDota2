@@ -151,6 +151,11 @@ void Hero::set_order(PyObject* order)
 {
 }
 
+void Hero::set_move_order(const pos_tup& order)
+{
+    move_order = order;
+}
+
 void Hero::set_target(Sprite* s)
 {
     target = s;
