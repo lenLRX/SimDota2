@@ -58,5 +58,5 @@ private:
 };
 
 #define REG_FEATURE_FN(name, fn) \
-static int i_feature_reg##fn = FeatureConfig::registerFeatureFn(name, fn);
+static int i_feature_reg_##fn = FeatureConfig::registerFeatureFn(name, fn);
 

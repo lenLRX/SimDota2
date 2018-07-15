@@ -7,10 +7,14 @@
 
 #include <algorithm>
 
-cppSimulatorImp::cppSimulatorImp(cppSimulatorObject* obj, const std::string& featureName,
-    Config* cfg, PyObject* canvas)
+cppSimulatorImp::cppSimulatorImp(cppSimulatorObject* obj,
+    const std::string& featureName,
+    const std::string& actionSpaceName,
+    Config* cfg,
+    PyObject* canvas)
     :self(obj), cfg(cfg), tick_time(0.0), tick_per_second(cfg->tick_per_second),
-    delta_tick(1.0 / cfg->tick_per_second), canvas(canvas), featureCfg(featureName)
+    delta_tick(1.0 / cfg->tick_per_second), canvas(canvas),
+    featureCfg(featureName), actionSpaceCfg(actionSpaceName)
 {
     EventFactory::CreateSpawnEvnt(this);
     Tower::initTowers(this);
@@ -172,12 +176,7 @@ void cppSimulatorImp::set_order(PyObject * args, PyObject * kwds)
         Logger::getInstance().flush();
         exit(2);
     }
-    if (0 == strcmp(side,"Radiant")) {
-        RadiantHeros[idx]->set_order(order);
-    }
-    else {
-        DireHeros[idx]->set_order(order);
-    }
+    actionSpaceCfg.applyAction(this, order, side, idx);
 }
 
 PyObject* cppSimulatorImp::getState(const std::string& side, int idx)
@@ -206,10 +205,5 @@ Hero* cppSimulatorImp::getHero(const std::string& side, int idx)
 
 PyObject* cppSimulatorImp::predefined_step(std::string side, int idx) 
 {
-    if (side == "Radiant") {
-        return RadiantHeros[idx]->predefined_step();
-    }
-    else {
-        return DireHeros[idx]->predefined_step();
-    }
+    return actionSpaceCfg.getPredefineAction(this, side, idx);
 }

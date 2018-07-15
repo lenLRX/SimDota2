@@ -24,6 +24,8 @@ public:
     virtual void step();
     virtual void draw();
     void set_order(PyObject* order);
+    void set_decision(int decision);
+    void set_target(Sprite* s);
     PyObject* get_state_tup();
     PyObject* predefined_step();
     
@@ -31,6 +33,8 @@ public:
     
     int get_max_health();
     int get_max_mana();
+
+    const target_list_t& getTargetList();
     
 private:
     pos_tup init_loc;

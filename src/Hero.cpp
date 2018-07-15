@@ -149,34 +149,21 @@ void Hero::draw()
 
 void Hero::set_order(PyObject* order)
 {
-    PyObject* subdecision;
-    if (!PyArg_ParseTuple(order, "iO", &decision, &subdecision)) {
-        LOG << "Parse Arg error";
-        return;
-    }
-    if (decisonType::noop == decision) {
-        ;
-    }
-    else if (decisonType::move == decision) {
-        int sign = side == Side::Radiant ? 1 : -1;
-        double x, y;
-        if (!PyArg_ParseTuple(subdecision, "dd", &x, &y)) {
-            LOG << "Parse Arg error";
-            return;
-        }
-        move_order = pos_tup(sign * x * 1000,
-            sign * y * 1000);
-    }
-    else if (decisonType::attack == decision) {
-        target = nullptr;
-        int target_idx = PyLong_AsLong(subdecision);
-        if (target_idx >= (int)target_list.size()) {
-            LOG << "index out of range! target_list size:" << target_list.size() << "," << target_idx << endl;
-            exit(4);
-        }
-        target = target_list[target_idx];
-    }
-    
+}
+
+void Hero::set_target(Sprite* s)
+{
+    target = s;
+}
+
+const target_list_t& Hero::getTargetList()
+{
+    return target_list;
+}
+
+void Hero::set_decision(int d)
+{
+    decision = d;
 }
 
 PyObject* Hero::get_state_tup()
@@ -266,51 +253,5 @@ PyObject* Hero::get_state_tup()
 
 PyObject* Hero::predefined_step()
 {
-    /*
-    //this is real bot should do, but it is hard to train
-    if (isAttacking()) {
-        Py_INCREF(Py_None);
-        PyObject* obj = Py_BuildValue("(iO)", decisonType::noop, Py_None);
-        return obj;
-    }
-    */
-    int sign = side == Side::Radiant ? 1 : -1;
-    auto nearby_enemy = Engine->get_nearby_enemy(this, data.SightRange);
-    auto nearby_enemy_size = nearby_enemy.size();
-    auto targetlist_size = target_list.size();
-    if (targetlist_size > 0)
-    {
-        for (int i = 0; i < targetlist_size; ++i) {
-            if (!target_list[i]->isDead() && target_list[i]->get_HP() < data.Attack) {
-                PyObject* obj = Py_BuildValue("(ii)", decisonType::attack, i);
-                return obj;
-            }
-        }
-    }
-    pos_tup ret;
-    int _dis = 700;
-    if (nearby_enemy.size() > 0)
-    {
-        ret = nearby_enemy[0].first->get_location();
-        if (side == Side::Radiant) {
-            ret = pos_tup(ret.x - _dis,
-                ret.y - _dis);
-        }
-        else {
-            ret = pos_tup(ret.x + _dis,
-                ret.y + _dis);
-        }
-    }
-    else {
-        ret = pos_tup(-482, -400);
-    }
-    
-    double dx = ret.x - location.x;
-    double dy = ret.y - location.y;
-    dx *= sign;
-    dy *= sign;
-
-    double a = std::atan2(dy, dx);
-    PyObject* obj = Py_BuildValue("(i(dd))", decisonType::move, std::cos(a), std::sin(a));
-    return obj;
+    Py_RETURN_NONE;
 }

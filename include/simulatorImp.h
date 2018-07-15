@@ -4,6 +4,7 @@
 #include "simulator.h"
 #include "Event.h"
 #include "FeatureRepresentation/FeatureRepresentation.h"
+#include "ActionSpace/ActionSpace.h"
 
 #include <queue>
 #include <list>
@@ -20,7 +21,11 @@ class cppSimulatorImp
 {
 public:
     cppSimulatorImp() = delete;
-    cppSimulatorImp(cppSimulatorObject* obj, const std::string& featureName, Config* cfg ,PyObject* canvas = nullptr);
+    cppSimulatorImp(cppSimulatorObject* obj,
+        const std::string& featureName,
+        const std::string& actionSpaceName,
+        Config* cfg,
+        PyObject* canvas = nullptr);
     ~cppSimulatorImp();
     inline Config* get_config() { return cfg; }
     double get_time();
@@ -43,6 +48,7 @@ public:
 private:
     cppSimulatorObject* self;
     FeatureConfig featureCfg;
+    ActionSpaceConfig actionSpaceCfg;
     Config* cfg;
     double tick_time;
     double tick_per_second;

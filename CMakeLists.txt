@@ -24,10 +24,12 @@ include_directories(include)
 file(GLOB HEADERS include/*.h)
 file(GLOB HEADERS include/Ability/*.h)
 file(GLOB HEADERS include/FeatureRepresentation/*.h)
+file(GLOB HEADERS include/ActionSpace/*.h)
 
 aux_source_directory(src SRCS)
 aux_source_directory(src/Ability SRCS)
 aux_source_directory(src/FeatureRepresentation SRCS)
+aux_source_directory(src/ActionSpace SRCS)
 add_library(cppSimulator SHARED ${SRCS} ${HEADERS})
 
 

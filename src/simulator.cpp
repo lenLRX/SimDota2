@@ -30,7 +30,12 @@ cppSimulator_init(cppSimulatorObject* self, PyObject *args, PyObject *kwds) {
     PyObject* obj_canvas = NULL;
     char* config_path = NULL;
     char* feature_name = NULL;
-    if (!PyArg_ParseTuple(args, "ss|O",&config_path, &feature_name, &obj_canvas)) {
+    char* actionspace_name = NULL;
+    if (!PyArg_ParseTuple(args, "sss|O",
+        &config_path,
+        &feature_name,
+        &actionspace_name,
+        &obj_canvas)) {
         return -1;
     }
     if (obj_canvas == Py_None) {
@@ -39,7 +44,11 @@ cppSimulator_init(cppSimulatorObject* self, PyObject *args, PyObject *kwds) {
     }
     
     auto pCfg = ConfigCacheMgr<Config>::getInstance().get(config_path);
-    self->pImp = new cppSimulatorImp(self, feature_name, pCfg, obj_canvas);
+    self->pImp = new cppSimulatorImp(self,
+        feature_name,
+        actionspace_name,
+        pCfg,
+        obj_canvas);
     //Py_XDECREF(args);
     //Py_XDECREF(kwds);
     return 0;
