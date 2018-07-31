@@ -120,7 +120,7 @@ void Sprite::dead(Sprite* attacker)
         if (s->side != side) {
             double dis = S2Sdistance(*s, *this);
             if (dis <= 1300.0) {
-                s->exp += data.bountyEXP;
+                s->data.exp += data.bountyEXP;
             }
             //else {
             //    s->exp += bountyEXP * (dis - 1300 + 1) / Config::map_div * 0.1;
@@ -128,7 +128,7 @@ void Sprite::dead(Sprite* attacker)
         }
     }
     if (nullptr != attacker) {
-        attacker->gold += data.Bounty;
+        attacker->data.gold += data.Bounty;
     }
 }
 

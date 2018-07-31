@@ -40,6 +40,7 @@ Config::Config(std::string json_path)
 
 
 SpriteData::SpriteData(std::string json_path)
+    :exp(0),gold(0)
 {
     std::ifstream ifs(json_path);
     Document document;

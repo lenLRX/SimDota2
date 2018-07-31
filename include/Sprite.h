@@ -54,7 +54,7 @@ typedef std::unordered_map<std::string, std::unordered_map<std::string, void*> >
 class Sprite {
 public:
     Sprite(SpriteData data) : unit_type(UNITTYPE_INVALID), addiHPReg(0.0), LastAttackTime(-1),
-        exp(0), gold(0), _isDead(false), b_move(false), canvas(NULL), v_handle(NULL), data(data) {}
+        _isDead(false), b_move(false), canvas(NULL), v_handle(NULL), data(data),prev_data(data) {}
 
     virtual ~Sprite(){
         remove_visual_ent();
@@ -91,6 +91,7 @@ public:
 
     inline void cost_MP(double m) { data.MP -= m; data.MP = data.MP > 0 ? data.MP : 0; }
     inline const SpriteData& getData() const { return data; }
+    inline const SpriteData& getPrevData() const { return prev_data; }
     inline double get_HP() { return data.HP; }
     inline double get_AttackTime() { return data.AttackTime; }
     inline double get_Attack() { return data.Attack; }
@@ -103,9 +104,13 @@ public:
 
     inline bool isBuilding() { return unit_type >= UNITTYPE_TOWER && unit_type <= UNITTYPE_EFFIGY; }
 
+    //this method is called before a tick start
+    inline void syncData() { prev_data = data; }
+
 protected:
     cppSimulatorImp* Engine;
     PyObject* canvas;
+    SpriteData prev_data;
     SpriteData data;
     Side side;
     pos_tup location;
@@ -113,8 +118,6 @@ protected:
     double addiHPReg;//addtional HP reg: item, talent, etc 
     double LastAttackTime;
     double AttackTime;
-    double exp;
-    double gold;
     bool _isDead;
     bool b_move;
     PyObject* v_handle;

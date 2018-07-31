@@ -160,6 +160,8 @@ public:
     AtkDmgType atkDmgType;
     ArmorType armorType;
     double viz_radius;
+    double exp;
+    double gold;
     void* ext;//shared ptr, you should never delete it!
 private:
     friend class ConfigCacheMgr<SpriteData>;

@@ -1,6 +1,6 @@
 #include "FeatureRepresentation/FeatureRepresentation.h"
 
-PyObject* getState(const cppSimulatorImp* engine, const std::string& side, int idx)
+static PyObject* getState(const cppSimulatorImp* engine, const std::string& side, int idx)
 {
     return nullptr;
 }

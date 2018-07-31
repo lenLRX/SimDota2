@@ -53,6 +53,10 @@ double cppSimulatorImp::get_time()
 
 void cppSimulatorImp::loop()
 {
+    for (Sprite* s : Sprites) {
+        s->syncData();
+    }
+
     tick_tick();
     while (!queue.empty() &&
         queue.top().get_time() < tick_time)

@@ -4,7 +4,7 @@
 #include "Creep.h"
 
 //no longer working ,just a example
-PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int idx)
+static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int idx)
 {
     Hero* hero = Engine->getHero(side, idx);
     int sign = side == "Radiant" ? 1 : -1;

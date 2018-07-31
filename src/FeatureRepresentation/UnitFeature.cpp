@@ -14,6 +14,7 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
     int sign = side == "Radiant" ? 1 : -1;
 
     const auto& data = hero->getData();
+    const auto& prev_data = hero->getPrevData();
     const auto& location = hero->get_location();
 
     auto nearby_ally = Engine->get_nearby_ally(hero, data.SightRange);
@@ -58,7 +59,7 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
         PyList_SetItem(env_state, i, vec_feature[i]);
     }
 
-    double reward = 0;
+    double reward = data.exp > prev_data.exp;
 
     PyObject* ret = Py_BuildValue("(OdO)", env_state, reward, hero->isDead() ? Py_True : Py_False);
     Py_XDECREF(env_state);

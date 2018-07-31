@@ -92,7 +92,7 @@ Hero::Hero(cppSimulatorImp* _Engine, Side _side, std::string type_name)
 
 Hero::~Hero()
 {
-    LOG << "gold:" << gold << endl;
+    LOG << "gold:" << data.gold << endl;
     Logger::getInstance().flush();
 }
 
@@ -242,12 +242,12 @@ PyObject* Hero::get_state_tup()
     Py_XDECREF(env_state);
     Py_XDECREF(state_targets_list);
 
-    double reward = (exp - last_exp) + (data.HP - last_HP) + (gold - last_gold);
+    double reward = (data.exp - last_exp) + (data.HP - last_HP) + (data.gold - last_gold);
     reward *= 0.001;
 
-    last_exp = exp;
+    last_exp = data.exp;
     last_HP = data.HP;
-    last_gold = gold;
+    last_gold = data.gold;
 
     PyObject* ret = Py_BuildValue("(OdO)", state, reward, _isDead ? Py_True : Py_False);
 
