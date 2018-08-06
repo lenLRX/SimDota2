@@ -1,6 +1,6 @@
 {
 
-  "tick_per_second": 10.0,
+  "tick_per_second": 20.0,
   "map_div": 7000.0,
   "rad_init_pos": {
     "x": -0.95714285714286,

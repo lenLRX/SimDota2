@@ -31,8 +31,8 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
     for (size_t i = 0; i < ally_input_size; ++i) {
         auto ally_loc = nearby_ally[i].first->get_location();
         vec_feature.push_back(Py_BuildValue(input_template,
-            sign * ally_loc.x / GET_CFG->map_div,
-            sign * ally_loc.y / GET_CFG->map_div,
+            sign * (ally_loc.x - location.x) / GET_CFG->map_div,
+            sign * (ally_loc.y - location.y) / GET_CFG->map_div,
             ONEHOT_ALLY));
     }
 
@@ -42,8 +42,8 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
     for (size_t i = 0; i < enemy_input_size; ++i) {
         auto enemy_loc = nearby_enemy[i].first->get_location();
         vec_feature.push_back(Py_BuildValue(input_template,
-            sign * enemy_loc.x / GET_CFG->map_div,
-            sign * enemy_loc.y / GET_CFG->map_div,
+            sign * (enemy_loc.x - location.x) / GET_CFG->map_div,
+            sign * (enemy_loc.y - location.y) / GET_CFG->map_div,
             ONEHOT_ENEMY));
     }
 
@@ -59,7 +59,7 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
         PyList_SetItem(env_state, i, vec_feature[i]);
     }
 
-    double reward = data.exp > prev_data.exp;
+    double reward = (data.exp > prev_data.exp) - (data.HP < prev_data.HP);
 
     PyObject* ret = Py_BuildValue("(OdO)", env_state, reward, hero->isDead() ? Py_True : Py_False);
     Py_XDECREF(env_state);
