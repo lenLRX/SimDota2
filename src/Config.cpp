@@ -67,8 +67,8 @@ SpriteData::SpriteData(std::string json_path)
     GET_DOUBLE(document, SightRange);
     GET_DOUBLE(document, Bounty);
     GET_DOUBLE(document, bountyEXP);
-    GET_DOUBLE(document, LastAttackTime);
-    GET_DOUBLE(document, AttackTime);
+    //GET_DOUBLE(document, LastAttackTime);
+    //GET_DOUBLE(document, AttackTime);
     GET_DOUBLE(document, AtkPoint);
     GET_DOUBLE(document, AtkBackswing);
     GET_DOUBLE(document, ProjectileSpeed);

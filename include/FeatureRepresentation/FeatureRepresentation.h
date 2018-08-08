@@ -18,14 +18,27 @@ class cppSimulatorImp;
 
 typedef std::function<PyObject*(cppSimulatorImp* engine, const std::string& side, int idx)> FeatureFn;
 
+class FeatureConfigReg
+{
+public:
+    static FeatureConfigReg& getInstance()
+    {
+        static FeatureConfigReg instance;
+        return instance;
+    }
+
+    std::map<std::string, FeatureFn> registy;
+};
+
 class FeatureConfig
 {
 public:
     FeatureConfig() :inited(false) {}
     FeatureConfig(const std::string& featureName):inited(true)
     {
-        auto fnIt = registy.find(featureName);
-        if (fnIt != registy.end())
+        auto& regInst = FeatureConfigReg::getInstance();
+        auto fnIt = regInst.registy.find(featureName);
+        if (fnIt != regInst.registy.end())
         {
             fn = fnIt->second;
         }
@@ -42,7 +55,7 @@ public:
 
     static int registerFeatureFn(const std::string& name, const FeatureFn& fn_)
     {
-        registy[name] = fn_;
+        FeatureConfigReg::getInstance().registy[name] = fn_;
         return 0;
     }
 
@@ -53,9 +66,10 @@ public:
     
 private:
     bool inited;
-    static std::map<std::string, FeatureFn> registy;
     FeatureFn fn;
 };
+
+
 
 #define REG_FEATURE_FN(name, fn) \
 static int i_feature_reg_##fn = FeatureConfig::registerFeatureFn(name, fn);

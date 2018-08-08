@@ -19,14 +19,29 @@ class cppSimulatorImp;
 typedef std::function<void(cppSimulatorImp*, PyObject*, const std::string&, int)> ActionSpaceFn;
 typedef std::function<PyObject*(cppSimulatorImp*, const std::string&, int)> PredefineActionSpaceFn;
 
+class ActionSpaceConfigReg
+{
+public:
+    //as feature
+    static ActionSpaceConfigReg& getInstance()
+    {
+        static ActionSpaceConfigReg instance;
+        return instance;
+    }
+
+    std::map<std::string, ActionSpaceFn> registy;
+    std::map<std::string, PredefineActionSpaceFn> predefineActionRegisty;
+};
+
 class ActionSpaceConfig
 {
 public:
     ActionSpaceConfig() :inited(false) {}
     ActionSpaceConfig(const std::string& actionSpaceName) :inited(true)
     {
-        auto fnIt = registy.find(actionSpaceName);
-        if (fnIt != registy.end())
+        auto& retInst = ActionSpaceConfigReg::getInstance();
+        auto fnIt = retInst.registy.find(actionSpaceName);
+        if (fnIt != retInst.registy.end())
         {
             fn = fnIt->second;
         }
@@ -35,8 +50,8 @@ public:
             LOG << "ActionSpaceConfig " << actionSpaceName << " not found" << std::endl;
         }
 
-        auto pdIt = predefineActionRegisty.find(actionSpaceName);
-        if (pdIt != predefineActionRegisty.end())
+        auto pdIt = retInst.predefineActionRegisty.find(actionSpaceName);
+        if (pdIt != retInst.predefineActionRegisty.end())
         {
             predefineAction = pdIt->second;
         }
@@ -58,13 +73,13 @@ public:
 
     static int registerActionSpaceFn(const std::string& name, const ActionSpaceFn& fn_)
     {
-        registy[name] = fn_;
+        ActionSpaceConfigReg::getInstance().registy[name] = fn_;
         return 0;
     }
 
     static int registerPredefineActionFn(const std::string& name, const PredefineActionSpaceFn& fn_)
     {
-        predefineActionRegisty[name] = fn_;
+        ActionSpaceConfigReg::getInstance().predefineActionRegisty[name] = fn_;
         return 0;
     }
 
@@ -75,8 +90,7 @@ public:
 
 private:
     bool inited;
-    static std::map<std::string, ActionSpaceFn> registy;
-    static std::map<std::string, PredefineActionSpaceFn> predefineActionRegisty;
+    
     ActionSpaceFn fn;
     PredefineActionSpaceFn predefineAction;
 };

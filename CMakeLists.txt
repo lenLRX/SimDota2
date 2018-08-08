@@ -32,14 +32,6 @@ aux_source_directory(src/FeatureRepresentation SRCS)
 aux_source_directory(src/ActionSpace SRCS)
 add_library(cppSimulator SHARED ${SRCS} ${HEADERS})
 
-
-add_executable(testSimulator ${SRCS} ${HEADERS} ./test/test_main.cpp)
-
-set_target_properties(testSimulator
-    PROPERTIES 
-    EXECUTABLE_OUTPUT_PATH ..
-)
-
 if (WIN32)
     set(LIB_SUFFIX ".pyd")
 endif (WIN32)

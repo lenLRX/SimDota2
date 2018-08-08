@@ -72,8 +72,8 @@ static PyObject* getPredefineAction(cppSimulatorImp* Engine, const std::string& 
     dx *= sign;
     dy *= sign;
 
-    double a = std::atan2(dy, dx);
-    PyObject* obj = Py_BuildValue("(i(dd))", decisonType::move, std::cos(a), std::sin(a));
+    double a = atan2(dy, dx);
+    PyObject* obj = Py_BuildValue("(i(dd))", decisonType::move, cos(a), sin(a));
     return obj;
 }
 

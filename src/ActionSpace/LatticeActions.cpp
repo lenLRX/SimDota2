@@ -22,8 +22,8 @@ static void setAction(cppSimulatorImp* Engine, PyObject* order, const std::strin
 
         double rad = dir * M_PI_4 - M_PI;
 
-        x = std::cos(rad);
-        y = std::sin(rad);
+        x = cos(rad);
+        y = sin(rad);
 
         hero->set_move_order(pos_tup(sign * x * 1000,
             sign * y * 1000));
@@ -83,7 +83,7 @@ static PyObject* getPredefineAction(cppSimulatorImp* Engine, const std::string& 
     dx *= sign;
     dy *= sign;
 
-    double a = std::atan2(dy, dx);
+    double a = atan2(dy, dx);
 
     if (b_stop)
     {
