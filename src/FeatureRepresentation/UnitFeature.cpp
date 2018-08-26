@@ -59,7 +59,7 @@ static PyObject* getState(cppSimulatorImp* Engine, const std::string& side, int 
         PyList_SetItem(env_state, i, vec_feature[i]);
     }
 
-    double reward = (data.exp > prev_data.exp) - (data.HP < prev_data.HP);
+    double reward = (data.exp > prev_data.exp) - 0.1 * (data.HP < prev_data.HP);
 
     PyObject* ret = Py_BuildValue("(OdO)", env_state, reward, hero->isDead() ? Py_True : Py_False);
     Py_XDECREF(env_state);

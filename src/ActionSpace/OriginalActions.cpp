@@ -50,7 +50,7 @@ static PyObject* getPredefineAction(cppSimulatorImp* Engine, const std::string& 
     auto nearby_enemy_size = nearby_enemy.size();
 
     pos_tup ret;
-    int _dis = 700;
+    int _dis = 500;
     if (nearby_enemy.size() > 0)
     {
         ret = nearby_enemy[0].first->get_location();
